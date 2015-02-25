@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Options Trading</title>
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+  <!--Add support for earlier versions of Internet Explorer -->
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <!-- Wrap the entire slide show in a div using the "reveal" class. -->
+  <div class="reveal">
+    <!-- Wrap all slides in a single "slides" class -->
+    <div class="slides">
+
+      <!-- ALL SLIDES GO HERE -->
+      <!-- Each section element contains an individual slide -->
+      <section>
+        <h1>Stock Options Trading</h1>
+      </section>
+
+
+
+
+
+      <section id="history">
+        <section>
+          <h2>History</h2>
+          <h4>Who traded the first option?</h4>
+        </section>
+
+        <section>
+          <h3>In 350 B.C. the philospher Thales anticiapted an abundant olive harvest in the coming year</h3>
+        </section>
+        <section>
+          <h3>In order to profit from this he put down deposits to tie up all of the local olive presses</h3>
+        </section>
+        <section>
+          <h3>When the prediction came true Thales profited handsomely by renting out the presses at an inflated rate</h3>
+        </section>
+        <section>
+          <h3>For a small amount of up front capital, Thales correct prediction netted him large gains.</h3>
+        </section>
+        <section>
+          <h3>What would have happened if Thales was wrong?</h3>
+        </section>
+        <section>
+          <h3>He would only have lost his initial deposit</h3>
+        </section>
+        <section>
+          <h3>Today we would say that Thales purchased a <strong>Call Option</strong> on olives</h3>
+        </section>
+      </section>
+
+
+
+
+
+      <section id="definitions">
+        <section>
+          <h2>Definitions</h2>
+          <h4>What the heck is an option?</h4>
+        </section>
+
+        <section>
+          <h3>An option a type of <strong>Derivitive</strong> contract based on an underlying asset</h3>
+        </section>
+
+        <section>
+          <h3>In theory this can be anything from commodities, currencies, real estate, equities, future events, etc.</h3>
+        </section>
+
+        <section>
+          <h3>Like currencies and stock trading, there are two sides of the transaction, a buyer (<strong>Owner</strong>) and a seller (<strong>Writer</strong>)
+        </section>
+
+        <section>
+          <h3>Today option trading has become standardized and in North America are traded on the Chicago Board Options Exchange (<strong>CBOE</strong>)</h3>
+        </section>
+
+        <section>
+          <h3>The CBOE was created in 1973 and initiated the first modern options market with guaranteed settlement, standardized prices, expiration and contract size</h3>
+        </section>
+
+        <section id="owner">
+          <h3>An option <strong>Owner</strong> has the <strong>Right</strong>, but not the obligation to <strong>Exercise</strong> the option contract at a stipulated price (<strong>Strike Price</strong>) for a specified period of time (<strong>Expiration Date</strong>)
+        </section>
+
+        <section id="writer">
+          <h3>An option <strong>Writer</strong> has the <strong>Obligation</strong> to honour the option contract at the strike price if the option owner <strong>chooses</strong> to exercise it.  Once the option expires or it is exercised the writer has no further obligations</h3>
+        </section>
+
+      </section>
+
+
+
+
+      <section id="calls-and-puts">
+        <h2>Types of Option Contracts</h2>
+        <h4>What are Calls and Puts?</h4>
+      </section>
+
+
+
+
+
+      <section id="call-options">
+        <section>
+          <h2>Call Option</h2>
+          <h3>A <strong>Call</strong> is a contract that grants its owner the right, but not the obligation, to <strong>Buy 100 shares</strong> of a specific underlying stock at a <strong>Fixed Strike Price</strong> per share, on or before a specific <strong>Expiration Date</strong></h3>
+        </section>
+
+        <section>
+          <h3>The owner purchases this contract from the writer for a <strong>Premium</strong></h3>
+        </section>
+
+        <section>
+          <h4>The owner has three courses of action that they can take:</h4>
+          <br/>
+          <ul class="fragment">
+            <li class"fragment">Allow the option to <strong>expire worthless</strong>, which generally occurs when the current market value of the underlying asset remains <strong>below</strong> the strike price</li>
+            <br/>
+            <li class="fragment"><strong>Sell the contract</strong> to someone else on the exchange, which could result in a profit or loss depending on if the owner can sell the option at a <strong>higher price than the original premium</strong> paid</li>
+            <br/>
+            <li class="fragment"><strong>Exercise</strong> the option and buy 100 shares at the strike price which will <strong>require sufficient capital at time of exercise</strong></li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>It is called a Call Option because if exercised, the option writer will have the underlying stock "called" away from them</h3>
+        </section>
+
+      </section>
+
+      <section id='call-example'>
+
+        <section>
+          <h2>Call Example</h2>
+          <ul class="fragment">
+            <li >It is Jan 1 and Google is trading at $500</li>
+            <li class="fragment">Jill has $1500</li>
+            <li class="fragment">Jill could purchase <strong>3</strong> shares of Google for $1500 and own 3 shares</li>
+            <li class="fragment">Alternatively, Jill could buy an April/550 call option for a premium of $15.00 a share paying $1500 to control <strong>100</strong> shares of Google</li>
+          </ul>
+        </section>
+
+        <section>
+          <p>Assume Google <strong>rises to $580</strong></p>
+          <ul class="fragment">
+            <li>If Jill owned the stock she could sell and realize an $80 profit per share, or <strong>$240</strong></li>
+            <li class="fragment">Alternatively, if Jill owned the call option she can sell her call option for $30 per share, gaining $3000 in revenue. Minus her initial outlay she makes <strong>$1500</strong></li>
+          </ul>
+        </section>
+
+        <section id="long-call">
+        </section>
+
+<!--        <section>
+          <p>Call P/L Comparison</p>
+          <table>
+            <tr>
+              <th>Price at Expiration</th>
+              <th>Option P/L</th>
+              <th>Stock P/L</th>
+            </tr>
+            <tr>
+              <td>480</td><td>-1500</td><td>-60</td>
+            </tr>
+            <tr>
+              <td>500</td><td>-1500</td><td>0</td>
+            </tr>
+            <tr>
+              <td>520</td><td>-1500</td><td>60</td>
+            </tr>
+            <tr>
+              <td>540</td><td>-1500</td><td>120</td>
+            </tr>
+            <tr>
+              <td>560</td><td>-500</td><td>180</td>
+            </tr>
+            <tr>
+              <td>580</td><td>1500</td><td>240</td>
+            </tr>
+            <tr>
+              <td>600</td><td>3500</td><td>300</td>
+            </tr>
+          </table>
+        </section>
+-->
+
+        <section>
+          <h3>This strategy is called buying an <strong>Out of the Money</strong> long call option.
+          <h3>It is a highly speculative strategy that allows you to leverage small capital into large gains, providing that the underlying stock rises enough before expiration</h3>
+       </section>
+      </section>
+
+
+
+
+      <section id="put-options">
+        <section>
+          <h2>Put Option</h2>
+          <h3>A <strong>Put</strong> is a contract that grants its owner the right, but not the obligation, to <strong>Sell 100 shares</strong> of a specific underlying stock at a <strong>Fixed Strike Price</strong> per share, on or before a specific <strong>Expiration Date</strong></h3>
+        </section>
+
+        <section>
+          <h3>The owner purchases this contract from the writer for a <strong>Premium</strong></h3>
+        </section>
+
+        <section>
+          <h4>The owner has three courses of action that they can take:</h4>
+          <br/>
+          <ul class="fragment">
+            <li class"fragment">Allow the option to <strong>expire worthless</strong>, which generally occurs when the current market value of the underlying asset remains <strong>above</strong> the strike price</li>
+            <br/>
+            <li class="fragment"><strong>Sell the contract</strong> to someone else on the exchange, which could result in a profit or loss depending on if the owner can sell the option at a <strong>higher price than the original premium</strong> paid</li>
+            <br/>
+            <li class="fragment"><strong>Exercise</strong> the option and sell 100 shares at the strike price which will <strong>require 100 shares of the stock at time of exercise</strong></li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>It is called a Put Option because if exercised, the option writer will have the underlying stock "put" to them</h3>
+        </section>
+
+      </section>
+
+
+      <section id='put-example'>
+
+        <section>
+          <h2>Put Example</h2>
+          <p class="fragment">It is Jan 1 and GOOG is trading at $500</p>
+          <p class="fragment">Jill owns 100 shares of GOOG and is concerned about GOOG dropping but still wants to profit if it rises</p>
+          <p class="fragment">Jill buys an April/500 put option for a premium of $5.00 a share paying $500 to protect <strong>100</strong> shares of GOOG</p>
+        </section>
+
+        <section>
+          <p>Assume GOOG drops to $450</p>
+          <p class="fragment">If Jill didn't buy the put option she would have lost $50 per share or <strong>-$5000</strong> total.</p>
+          <p class="fragment">If Jill owned the put option she can sell her put option for $50 per share, netting a $4500 gain to offset her stock losses which would now be <strong>-$500</strong>
+        </section>
+
+        <section id="protective-put">
+        </section>
+
+<!--        <section>
+          <p>Put P/L Comparison</p>
+          <table>
+            <tr>
+              <th>Price at Expiration</th>
+              <th>Option P/L</th>
+              <th>Stock P/L</th>
+            </tr>
+            <tr>
+              <td>400</td><td>-500</td><td>-10000</td>
+            </tr>
+            <tr>
+              <td>420</td><td>-500</td><td>-8000</td>
+            </tr>
+            <tr>
+              <td>440</td><td>-500</td><td>-6000</td>
+            </tr>
+            <tr>
+              <td>460</td><td>-500</td><td>-4000</td>
+            </tr>
+            <tr>
+              <td>480</td><td>-500</td><td>-2000</td>
+            </tr>
+            <tr>
+              <td>500</td><td>-500</td><td>0</td>
+            </tr>
+            <tr>
+              <td>520</td><td>1500</td><td>2000</td>
+            </tr>
+          </table>
+        </section> -->
+
+        <section>
+          <h3>This strategy is called buying an <strong>At The Money</strong> protective put option. It allows you to protect an existing position against a drop in value for a relatively small premium, similiar to insurance.</h3>
+        </section>
+
+      </section>
+
+
+
+
+
+      <section id="moneyness">
+
+        <section>
+        <h2>Option Moneyness</h2>
+        <h4>Huh? That's a word?</h4>
+        </section>
+
+        <section>
+          <h3>"In finance, moneyness is the relative position of the current price (or future price) of an underlying asset (e.g., a stock) with respect to the strike price of a derivative" (Wikipedia)</h3>
+        </section>
+
+        <section>
+          <h3><strong>Out of the money</strong> options are options whose strike price is such that the option has <strong>no intrinsic value</strong> at current market prices</h3>
+        </section>
+
+        <section>
+          <h4>Examples of Out of the Money Options</h4>
+          <ul class="fragment">
+            <li>A 550 call when the current stock price is less than 550</li>
+            <li class="fragment">A 20 put when the current stock price is greater than 20</li>
+            <li class="fragment">In selling the option you will lose ~ the difference</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3><strong>At the money</strong> options are options whose strike price is the <strong>same as</strong> the current market price</h3>
+        </section>
+
+        <section>
+          <h4>Examples of At the Money Options</h4>
+          <ul class="fragment">
+            <li>A 550 call when the current stock price is ~550</li>
+            <li class="fragment">A 20 put when the current stock price is approximately 20</li>
+            <li class="fragment">In selling the option you will essentially break even</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3><strong>In the money</strong> options are options whose strike price is such that the option is <strong>has instrinsic value</strong> at current market prices</h3>
+        </section>
+
+        <section>
+          <h4>Examples of In the Money Options</h4>
+          <ul class="fragment">
+            <li>A 550 call when the current stock price is greater than 550</li>
+            <li class="fragment">A 20 put when the current stock price is less than 20</li>
+            <li class="fragment">By selling the option you will profit ~ the difference</li>
+          </ul>
+        </section>
+
+      </section>
+
+
+
+
+
+
+
+
+      <section id="valuation">
+        <section>
+          <h2>Option Valuation</h2>
+          <h4>How is an option price calculated?</h4>
+        </section>
+
+        <section>
+          <h3>A stock option's market price is determined by the sum of two factors: <strong>Instrinsic</strong> value and <strong>Extrinsic</strong> value</h3>
+        </section>
+
+        <section>
+          <h2>Instrinsic Value</h2>
+          <h3>An option has intrinsic value only when it is <strong>In the money</strong>, and is equal to the <strong>difference between</strong> the strike price and the current market price</h3>
+        </section>
+
+        <section>
+          <h3>Examples</h3>
+          <ul class="fragment">
+            <li>A 50 Call option for a stock that is currently at $51.50 has an intrinsic value of $1.50 per share</li>
+            <li class="fragment">A 10 Put option for a stock that is currently $5 has an intrinsic value of $5 per share</li>
+            <li class="fragment">A 20 Call option for a stock that is currently at $15 has no intrinsic value</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Extrinsic Value</h2>
+          <h3>An option has extrinsic value when there is uncertainty in the future price of the underlying stock</h3>
+        </section>
+
+        <section>
+          <h3>Factors that affect extrinsic value are:</h3>
+          <ul>
+            <li>time to expiration</li>
+            <li>volatility of the underlying stock</li>
+            <li>variation in interest rates</li>
+        </section>
+
+      </section>
+
+      <section id='black-scholes'>
+
+        <section>
+          <h2>Black-Scholes Model</h2>
+        </section>
+
+        <section>
+          <h3>Until recently, pricing the extrinsic value of an option was more an art than a science</h3>
+        </section>
+
+        <section>
+          <h3>In 1973 Fischer Black and Myron Scholes published their paper, "The Pricing of Options and Corporate Liabilities" in which they derived a partial differential equation to estimate the price of options over time</h3>
+        </section>
+
+        <section>
+        </section>
+
+      </section>
+
+
+
+      <section id='covered-calls'>
+
+        <section>
+          <h2>Covered Call Strategy</h2>
+        </section>
+
+        <section>
+          <h3>A conservative trading strategy where you believe that the underlying stock will appreciate over time.  In addition to buying the stock itself, you write out of the money call options for that stock.</h3>
+        </section>
+
+        <section>
+          <h3>Example</h3>
+          <ul class="fragment">
+            <li>RY is currently trading at $60 and you are bullish on the stock long term.  You want to own RY to capture the <strong>benefits of dividends</strong> but would also like to <strong>maximise your rate of return</strong> if RY rises, and <strong>reduce your downside</strong> if RY falls slightly.</li>
+            <li class="fragment">You decide to employ the covered call strategy by buying 100 shares of RY's stock and simultaneously <strong>writing</strong> an <strong>Out of the Money Call Option</strong> with a strike price of $70 for $2.50 a share.</li>
+            <li class="fragment">This nets you a $250 premium upfront</li>
+          </ul>
+        </section>
+
+        <section>
+          <ul>
+            <li class="fragment">If RY goes down the option expires worthless and you keep the $250 to offset your capital loss on the stock</li>
+            <li class="fragment">If RY goes sideways the option expires worthless and you keep the $250 as profit</li>
+            <li class="fragment">If RY rises to 69 the option expires worthless and you keep the $250 plus your capital gain on the stock</li>
+            <li class="fragment">If RY rises just above 70 the option is excercised and your 100 shares of RY are automatically sold at 70. You keep the $250 plus the $7000 from selling the shares</li>
+            <li class="fragment">If RY looks like it will rise significantly more than 70 you close your option position at a slight loss and roll your call options forward to a higher strike price, getting another premium in the process</li>
+        </section>
+
+      <section id="covered-call">
+      </section>
+<!--      <section>
+        <p>Covered Call 70 P/L Comparison</p>
+        <table>
+          <tr>
+            <th>Price at Expiration</th>
+            <th>Covered Call P/L</th>
+            <th>Stock P/L</th>
+          </tr>
+          <tr>
+            <td>50</td><td>-750</td><td>-1000</td>
+          </tr>
+          <tr>
+            <td>55</td><td>-250</td><td>-500</td>
+          </tr>
+          <tr>
+            <td>60</td><td>250</td><td>0</td>
+          </tr>
+          <tr>
+            <td>65</td><td>750</td><td>500</td>
+          </tr>
+          <tr>
+            <td>70</td><td>1250</td><td>1000</td>
+          </tr>
+          <tr>
+            <td>75</td><td>1250</td><td>1500</td>
+          </tr>
+        </table>
+      </section> -->
+    </section>
+
+
+
+
+    <section id="long-put">
+    </section>
+
+      </div>
+  </div>
+
+  <style>
+    .strategy .container {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .strategy .container div {
+      display: inline-block;
+      font-size: 30px;
+      width: 45%;
+      margin: 2%;
+    }
+
+  </style>
+
+
+  <script src="js/Chart.min.js"></script>
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+  <script>
+    // Required, even if empty.
+    Reveal.initialize({
+    });
+
+
+    function renderPL(params)
+    {
+      var data, options, section, i, table, row, div, tdiv, cdiv, canvas, ctx;
+
+      data = {
+        labels: params.strikes,
+        datasets: [
+          {
+            data: params.optionPL,
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)"
+          },
+          {
+            data: params.stockPL,
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)"
+          }
+        ]
+      };
+
+      options = {
+        bezierCurve: false
+      };
+
+      section = $('#' + params.id);
+
+      section.addClass('strategy');
+      section.append($('<h3>').html(params.title));
+
+      div = $('<div class="container">');
+
+      tdiv = $('<div class="table">');
+
+      table = $('<table>');
+      row = $('<tr>');
+      row.append($('<th>').html('Price at Expiration'));
+      row.append($('<th>').html('With Options'));
+      row.append($('<th>').html('Stock Only'));
+      table.append(row);
+
+      for (i = 0; i < params.strikes.length; i++)
+      {
+        row = $('<tr>');
+        row.append($('<td>').html(params.strikes[i]));
+        row.append($('<td>').html(params.optionPL[i]));
+        row.append($('<td>').html(params.stockPL[i]));
+
+        table.append(row);
+      }
+
+      tdiv.append(table);
+
+      cdiv = $('<div class="graph">').append($('<canvas>'));
+
+      div.append(tdiv);
+      div.append(cdiv);
+
+      section.append(div);
+
+
+      canvas = $($('#' + params.id + ' canvas')[0]);
+      canvas.prop('height', $($('.slides section')[0]).height() * 1.25);
+      canvas.prop('width', $($('.slides section')[0]).width() / 2);
+
+      ctx = $('#' + params.id + ' canvas')[0].getContext("2d");
+      new Chart(ctx).Line(data, options);
+    }
+
+    $(document).ready(function() {
+      renderPL({
+        id: 'long-call',
+        title: 'Long Call',
+        strikes: [ 480, 500, 520, 540, 560, 580, 600 ],
+        optionPL: [ -1500, -1500, -1500, -1500, -500, 1500, 3500 ],
+        stockPL: [ -60, 0, 60, 120, 180, 240, 300 ]
+      });
+
+      renderPL({
+        id: 'protective-put',
+        title: 'Protective Put',
+        strikes: [ 400, 420, 440, 460, 480, 500, 520 ],
+        optionPL: [ -500, -500, -500, -500, -500, -500, 1500 ],
+        stockPL: [ -10000, -8000, -6000, -4000, -2000, 0, 2000 ]
+      });
+
+      renderPL({
+        id: 'covered-call',
+        title: 'Covered Call',
+        strikes: [ 50, 55, 60, 65, 70, 75 ],
+        optionPL: [ -750, -250, 250, 750, 1250, 1250 ],
+        stockPL: [ -1000, -500, 0, 500, 1000, 1500 ]
+      });
+    });
+
+
+  </script>
+</body>
+</html>
