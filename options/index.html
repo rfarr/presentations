@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Options Trading</title>
   <link rel="stylesheet" href="css/reveal.css">
-  <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+  <link rel="stylesheet" href="css/theme/serif.css" id="theme">
   <!--Add support for earlier versions of Internet Explorer -->
   <!--[if lt IE 9]>
   <script src="lib/js/html5shiv.js"></script>
@@ -140,20 +140,22 @@
 
         <section>
           <h2>Call Example</h2>
-          <ul class="fragment">
-            <li >It is Jan 1 and Google is trading at $500</li>
-            <li class="fragment">Jill has $1500</li>
-            <li class="fragment">Jill could purchase <strong>3</strong> shares of Google for $1500 and own 3 shares</li>
-            <li class="fragment">Alternatively, Jill could buy an April/550 call option for a premium of $15.00 a share paying $1500 to control <strong>100</strong> shares of Google</li>
-          </ul>
+            <p class="fragment">It is Jan 1 and Google is trading at $500</p>
+            <p class="fragment">Jill has $1500</p>
+            <p class="fragment">Jill could purchase <strong>3</strong> shares of Google for $1500 and own 3 shares</p>
+            <p class="fragment">Alternatively, Jill could buy an April/550 call option for a premium of $15.00 a share paying $1500 to control <strong>100</strong> shares of Google</p>
         </section>
 
         <section>
-          <p>Assume Google <strong>rises to $580</strong></p>
-          <ul class="fragment">
-            <li>If Jill owned the stock she could sell and realize an $80 profit per share, or <strong>$240</strong></li>
-            <li class="fragment">Alternatively, if Jill owned the call option she can sell her call option for $30 per share, gaining $3000 in revenue. Minus her initial outlay she makes <strong>$1500</strong></li>
-          </ul>
+          <h3>Assume Google <strong>rises to $580</strong></h3>
+        </section>
+
+        <section>
+            <h3>If Jill owned the stock she could sell and realize an $80 profit per share, or <strong>$240</strong></h3>
+        </section>
+
+        <section>
+            <h3>Alternatively, if Jill owned the call option she can sell her call option for $30 per share, gaining $3000 in revenue. Minus her initial outlay she makes <strong>$1500</strong></h3>
         </section>
 
         <section id="long-call">
@@ -240,9 +242,15 @@
         </section>
 
         <section>
-          <p>Assume GOOG drops to $450</p>
-          <p class="fragment">If Jill didn't buy the put option she would have lost $50 per share or <strong>-$5000</strong> total.</p>
-          <p class="fragment">If Jill owned the put option she can sell her put option for $50 per share, netting a $4500 gain to offset her stock losses which would now be <strong>-$500</strong>
+          <h3>Assume GOOG <strong>drops to $450</strong></h3>
+        </section>
+
+        <section>
+          <h3>If Jill didn't buy the put option she would have lost $50 per share or <strong>-$5000</strong> total.</h3>
+        </section>
+
+        <section>
+          <h3>If Jill owned the put option she can sell her put option for $50 per share, netting a $4500 gain to offset her stock losses which would now be <strong>-$500</strong></h3>
         </section>
 
         <section id="protective-put">
@@ -352,7 +360,7 @@
       <section id="valuation">
         <section>
           <h2>Option Valuation</h2>
-          <h4>How is an option price calculated?</h4>
+          <h4>How do you price these things?</h4>
         </section>
 
         <section>
@@ -392,7 +400,7 @@
 
         <section>
           <h2>Black-Scholes Model</h2>
-          <h4>Bring rigor to option pricing</h4>
+          <h4>Bringing rigor to option pricing</h4>
         </section>
 
         <section>
@@ -444,12 +452,23 @@
         </section>
 
         <section>
-          <ul>
-            <li class="fragment">If RY goes down the option expires worthless and you keep the $250 to offset your capital loss on the stock</li>
-            <li class="fragment">If RY goes sideways the option expires worthless and you keep the $250 as profit</li>
-            <li class="fragment">If RY rises to 69 the option expires worthless and you keep the $250 plus your capital gain on the stock</li>
-            <li class="fragment">If RY rises just above 70 the option is excercised and your 100 shares of RY are automatically sold at 70. You keep the $250 plus the $7000 from selling the shares</li>
-            <li class="fragment">If RY looks like it will rise significantly more than 70 you close your option position at a slight loss and roll your call options forward to a higher strike price, getting another premium in the process</li>
+            <h3>If RY goes down the option expires worthless and you keep the $250 to offset your capital loss on the stock</h3>
+        </section>
+
+	<section>
+            <h3>If RY goes sideways the option expires worthless and you keep the $250 as profit</h3>
+        </section>
+
+        <section>
+            <h3>If RY rises to just under $70 the option expires worthless and you keep the $250 plus your capital gain on the stock</h3>
+        </section>
+
+        <section>
+            <h3>If RY rises above $70 the option is excercised and your 100 shares of RY are sold at $70. You keep the $250 plus the $7000 from selling the shares</h3>
+        </section>
+
+        <section>
+            <h3>If RY looks like it will rise significantly more than $70 you close your option position at a slight loss and roll your call options forward to a higher strike price, getting another premium in the process</h3>
         </section>
 
       <section id="covered-call">
@@ -503,10 +522,15 @@
         </section>
 
         <section>
-          <ul>
-            <li class="fragment">If RY goes down to $50 then you ignore the call and sell the put for $10 a share, netting $750 profit</li>
-            <li class="fragment">If RY goes sideways both options expires worthless and you lost $250</li>
-            <li class="fragment">If RY rises to $70 then you ignore the put and sell the call for $10 a share, netting $750 profit</li>
+            <h3>If RY goes down to $50 then you ignore the call and sell the put for $10 a share, netting $750 profit</h3>
+        </section>
+
+        <section>
+            <h3>If RY goes sideways both options expires worthless and you lost $250</h3>
+        </section>
+
+        <section>
+            <h3>If RY rises to $70 then you ignore the put and sell the call for $10 a share, netting $750 profit</h3>
         </section>
 
       <section id="long-straddle">
@@ -518,6 +542,14 @@
 
       <section id="short-straddle">
       </section>
+    </section>
+
+    <section>
+      <h3>Of course their are many more strategies that can be tailored to your needs.  Remember the more complicated the option setup the more likely you are to make a mistake!</h3>
+    </section>
+
+    <section>
+      <h1>Questions ?</h1>
     </section>
 
 
