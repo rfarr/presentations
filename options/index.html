@@ -392,6 +392,7 @@
 
         <section>
           <h2>Black-Scholes Model</h2>
+          <h4>Bring rigor to option pricing</h4>
         </section>
 
         <section>
@@ -402,11 +403,25 @@
           <h3>In 1973 Fischer Black and Myron Scholes published their paper, "The Pricing of Options and Corporate Liabilities" in which they derived a partial differential equation to estimate the price of options over time</h3>
         </section>
 
-        <section>
+        <section id="black-scholes-equation">
+          <img src="img/bs.png"/>
+          <ul>
+            <li>C(S,t) = <i>value of a call option at stock price S and time t</i></li>
+            <li>S = <i>Price of underlying stock</i></li>
+            <li>t = <i>time to evalute price (usually the present)</i></li>
+            <li>N(x) = <i>the cumulative distribution function of the standard normal distribution</i></li>
+            <li>K = <i>strike price of option</i></li>
+            <li>σ = <i>underlying volatility of the stock</i></li>
+            <li>Γ = <i>rate of free return (interest rate)</i></li>
+          </ul>
         </section>
 
       </section>
 
+
+      <section>
+        <h1>Additional Options Strategies</h1>
+      </section>
 
 
       <section id='covered-calls'>
@@ -469,11 +484,42 @@
       </section> -->
     </section>
 
+      <section id='straddle'>
 
+        <section>
+          <h2>The Straddle</h2>
+        </section>
 
+        <section>
+          <h3>Allows you to profit from either high volatility (long straddle) or low volatility (short straddle) no matter which way the stock moves</h3>
+        </section>
 
-    <section id="long-put">
+        <section>
+          <h3>Example</h3>
+          <ul class="fragment">
+            <li>RY is currently trading at $60 and you believe that there will be movement, but you're not sure which way it will go.</li>
+            <li class="fragment">You decide to employ the long straddle buying both a call option and a put option at a strike price of $60 for a cost of $2.50 per share or $250 overall.</li>
+          </ul>
+        </section>
+
+        <section>
+          <ul>
+            <li class="fragment">If RY goes down to $50 then you ignore the call and sell the put for $10 a share, netting $750 profit</li>
+            <li class="fragment">If RY goes sideways both options expires worthless and you lost $250</li>
+            <li class="fragment">If RY rises to $70 then you ignore the put and sell the call for $10 a share, netting $750 profit</li>
+        </section>
+
+      <section id="long-straddle">
+      </section>
+
+      <section>
+        <h3>A short straddle is similiar except you write a call and a put at $60, netting a premium of $250.  If the stock doesn't move you keep it.</h3>
+      </section>
+
+      <section id="short-straddle">
+      </section>
     </section>
+
 
       </div>
   </div>
@@ -490,6 +536,16 @@
       font-size: 30px;
       width: 45%;
       margin: 2%;
+    }
+
+    #black-scholes-equation img {
+      width: 90%;
+      border: none;
+      box-shadow: none;
+    }
+
+    #black-scholes-equation {
+      font-size: 30px;
     }
 
   </style>
@@ -510,19 +566,35 @@
     {
       var data, options, section, i, table, row, div, tdiv, cdiv, canvas, ctx;
 
+      var zero = [];
+      for (i = 0; i < params.optionPL.length; i++) {
+        zero.push(0);
+      }
+
+
       data = {
         labels: params.strikes,
         datasets: [
           {
+            data: zero,
+            strokeColor: "rgba(200, 200, 200, 1)",
+            fillColor: "rgba(120,120,120,0)",
+            pointColor: "rgba(50,50,50,0)",
+          },
+          {
             data: params.optionPL,
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
+            fillColor: "rgba(120,120,120,0.2)",
+            strokeColor: "rgba(50,50,50,1)",
+            pointColor: "rgba(50,50,50,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)"
           },
-          {
+        ]
+      };
+
+      if (params.stockPL) {
+        data.datasets.push({
             data: params.stockPL,
             fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
@@ -530,12 +602,12 @@
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(151,187,205,1)"
-          }
-        ]
+          })
       };
 
       options = {
-        bezierCurve: false
+        bezierCurve: false,
+        pointDot: false
       };
 
       section = $('#' + params.id);
@@ -550,8 +622,10 @@
       table = $('<table>');
       row = $('<tr>');
       row.append($('<th>').html('Price at Expiration'));
-      row.append($('<th>').html('With Options'));
-      row.append($('<th>').html('Stock Only'));
+      row.append($('<th>').html('Options'));
+      if (params.stockPL) {
+        row.append($('<th>').html('Stock Only'));
+      }
       table.append(row);
 
       for (i = 0; i < params.strikes.length; i++)
@@ -559,7 +633,9 @@
         row = $('<tr>');
         row.append($('<td>').html(params.strikes[i]));
         row.append($('<td>').html(params.optionPL[i]));
-        row.append($('<td>').html(params.stockPL[i]));
+        if (params.stockPL) {
+          row.append($('<td>').html(params.stockPL[i]));
+        }
 
         table.append(row);
       }
@@ -605,6 +681,20 @@
         strikes: [ 50, 55, 60, 65, 70, 75 ],
         optionPL: [ -750, -250, 250, 750, 1250, 1250 ],
         stockPL: [ -1000, -500, 0, 500, 1000, 1500 ]
+      });
+
+      renderPL({
+        id: 'long-straddle',
+        title: 'Long Straddle',
+        strikes: [ 50, 55, 60, 65, 70 ],
+        optionPL: [ 750, 250, -250, 250, 750 ],
+      });
+
+      renderPL({
+        id: 'short-straddle',
+        title: 'Short Straddle',
+        strikes: [ 50, 55, 60, 65, 70 ],
+        optionPL: [ -750, -250, 250, -250, -750 ],
       });
     });
 
