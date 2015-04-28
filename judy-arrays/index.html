@@ -127,18 +127,52 @@
       <section>
         <section>
           <h3>Judy Array Pointer</h3>
+          <ul class="fragment">
+            <li>Root pointer to the entire Judy array</li>
+            <li class="fragment">Ordinary 1 word pointer</li>
+            <li class="fragment">Because it always references a 2 word aligned object, we can use the least 3 significant bits to encode the object type for free</li>
+            <li class="fragment">Can optimize for the case where there is only 1 or 2 indexes in the entire array, especially when there are a huge number of separate arrays</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Judy Arrap Pointer</h3>
+          <img src="img/jap.png"></img>
         </section>
       </section>
 
       <section>
         <section>
           <h3>Root Leaves</h3>
+          <ul class="fragment">
+            <li>If population is small enough we store all the entries in a root level leaf</li>
+            <li class="fragment">The leaf is limited to 2 words for Judy1 and 4 words for JudyL</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Judy1 Root Leaves</h3>
+          <img src="img/judy1-root-leaf.png"></img>
+        </section>
+
+        <section>
+          <h3>JudyL Root Leaves</h3>
+          <img src="img/judyl-root-leaf.png"></img>
         </section>
       </section>
 
       <section>
         <section>
           <h3>Judy Population/Memory Node</h3>
+          <ul class="fragment">
+            <li>JPM used when Judy array's population is larger than 31 indices</li>
+            <li class="fragment">JPM is 10 words in size and includes total population counter, pointers to the first and last Judy Pointers as well as other information</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Judy Population/Memory Node</h3>
+          <img src="img/jpm.png"></img>
         </section>
       </section>
 
@@ -278,6 +312,31 @@
         <h3><i>People who deal with bits should expect to get bitten. - Jon Bentley</i></h3>
       </section>
 
+      <section>
+        <h3>When to use Judy</h3>
+        <ul class="fragment">
+          <li></li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Implementation</h3>
+        <ul class="fragment">
+          <li>Original implementation written by a team of engineers at HP</li>
+          <li>20000 LO C code</li>
+          <li>Released under the LGPL license</li>
+          <li>Another implementation of Judy arrays was done in only 1250 LOC</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Perl Example</h3>
+        <pre class="code">
+        </pre>
+      </section>
+
+      <section>
+      </section>
 
 
       </div>
