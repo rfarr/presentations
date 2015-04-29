@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Judy Arrays</title>
   <link rel="stylesheet" href="css/reveal.css">
-  <link rel="stylesheet" href="css/theme/serif.css" id="theme">
+  <link rel="stylesheet" href="css/theme/beige.css" id="theme">
   <!--Add support for earlier versions of Internet Explorer -->
   <!--[if lt IE 9]>
   <script src="lib/js/html5shiv.js"></script>
@@ -25,103 +25,125 @@
       </section>
 
       <section>
-        <h2>From the manual:</h2>
-        <h3><i>Judy is a programming library that provides a relatively simple interface (API) for array-like storage of word or string indexes with optional mapping of indexes to single-word values.</i></h3>
+
+        <section>
+          <h2>From the manual:</h2>
+          <h4><i>Judy is a programming library that provides a relatively simple interface (API) for array-like storage of word or string indexes</i></h4>
+        </section>
+
+        <section>
+          <h4><i>Judy arrays are remarkably fast, space- efficient, and simple to use. No initialization, configuration, or tuning is required or even possible, yet Judy works well over a wide dynamic range from zero to billions of indexes, over a wide variety of types of data sets -- sequential, clustered, periodic, random.</i></h4>
+        </section>
+
       </section>
 
       <section>
-        <h3><i>Judy arrays are remarkably fast, space- efficient, and simple to use. No initialization, configuration, or tuning is required or even possible, yet Judy works well over a wide dynamic range from zero to billions of indexes, over a wide variety of types of data sets -- sequential, clustered, periodic, random.</i></h3>
-      </section>
 
-      <section>
-        <h3>Traditional Array</h3>
-        <img src="img/array.png"/>
-        <ul class="fragment">
-          <li>Array consists of contiguous segments of elements that are indexed via a start location plus a memory offset</li>
-          <li class="fragment">Very fast lookup, insertion, deletion of any given index</li>
-        </ul>
-      </section>
 
-      <section>
-        <h3>Disadvantages</h3>
-        <ul class="fragment">
-          <li>What if I want to store a value with index 0 and another value with index 2^64-1 ?</li>
-          <li class="fragment">How to efficiently iterate in order over sparse set?</li>
-          <li class="fragment">How to quickly get a count of elements in array?</li>
-      </section>
+        <section>
+          <h3>Traditional Array</h3>
+          <img src="img/array.png"/>
+          <ul class="fragment">
+            <li>Array consists of contiguous segments of elements that are indexed via a start location plus a memory offset</li>
+            <li class="fragment">Very fast lookup, insertion, deletion of any given index</li>
+          </ul>
+        </section>
 
-      <section>
+        <section>
+          <h3>Disadvantages</h3>
+          <ul class="fragment">
+            <li>What if I want to store a value with index 0 and another value with index 2<sup>64</sup> - 1 ?</li>
+            <li class="fragment">How to efficiently iterate in order over sparse set?</li>
+            <li class="fragment">How to quickly get a count of elements in array?</li>
+        </section>
+
+        <section>
+          <h3>What about a hash?</h3>
+          <ul class="fragment">
+            <li>Efficient lookup and insertion, uses relatively little memory</li>
+            <li class="fragment">In order traversal requires keeping a separate index</li>
+            <li class="fragment">Hash parameters and function need to be carefully selected for type of data</li>
+            <li class="fragment">Can reallocate the hash once it gets too full but this is costly and introduces unpredictable latency</li>
+        </section>
+
         <section>
           <h3>Terms</h3>
 
           <h4 class="fragment">Population: The set of elements stored in the datastructure</h4>
           <h4 class="fragment">Expanse: The range of possible keys that can address the datastructure</h4>
         </section>
+      </section> 
+
+      <section>
+        <section>
+          <h3>Digital Trees</h3>
+          <p class="fragment">A simple flat array requires the entire expanse's size in memory usage</p>
+          <p class="fragment">What if we use more than 1 array to lookup the index?</p>
+        </section>
+
+        <section>
+          <p>Divide our original array in half, and decode the index in steps.</p>
+          <p class="fragment">Take the first half of the index and lookup a pointer to another array.  Take the second half of the index and lookup the final value in the second array.</p>
+          <p class="fragment">If the population is sparse we can likely just use null pointers for most of the entries in the first array, saving memory.<p>
+          <p class="fragment">This basic data structure of multiple levels with multiple fanout pointers from each is known as a digital tree or "trie".</p>
+        </section>
+
+        <section>
+          <h3>Digital Trees</h3>
+          <p>Decode "485"</p>
+          <img src="img/trie.png"></img>
+        </section>
+
+        <section>
+          <p>The order of a digital tree is the number of branches that can be taken at each level.</p>
+          <p class="fragment">A low order wastes less memory because fewer entries in each branch are null pointers.
+          <p class="fragment">However a low order tree is deeper and requires more indirections to decode the key.</p>
+          <p class="fragment">If we could somehow combine a high order with low memory waste...</p>
+        </section>
+
       </section>
 
       <section>
-        <h3>Basic Judy Concept</h3>
-        <p class="fragment">Suppose we want to be able to store up to N values with key expanse N</p>
-        <p class="fragment">A simple flat array requires N memory usage</p>
-        <p class="fragment">Here's an idea: what if we use more than 1 array to lookup the index?</p>
-      </section>
 
-      <section>
-        <p>Divide our original array in half, and decode the key in steps.</p>
-        <p class="fragment">Take the first half of the key and lookup a pointer to another array.  Take the second half of the index and lookup the final value in the second array.</p>
-        <p class="fragment">If the population is sparse we can likely just use null pointers for most of the entries in the first array, saving memory.<p>
-        <p class="fragment">This basic data structure of multiple levels with multiple fanout pointers from each is known as a digital tree or "trie".</p>
-      </section>
+        <section>
+          <h3>Judy</h3>
+          <p class="fragment">Judy uses order 256 branches for performance</p>
+          <p class="fragment">With vanilla tries this would waste a large amount of memory</p>
+          <p class="fragment">Judy uses a variety of 'tricks' in order to compress the size of each branch or leaf depending on how 'full' it is</p>
+        </section>
 
-      <section>
-        <h3>Digital Tree</h3>
-        <p>Decode "485"</p>
-        <img src="img/trie.png"></img>
-      </section>
+        <section>
+          <h3>Judy arrays come in four different flavours:</h3>
+          <ul class="fragment">
+            <li>Judy1 - maps fixed size key to binary true/false</li>
+            <li class="fragment">JudyL - maps fixed size key to fixed size value</li>
+            <li class="fragment">JudyHS - maps variable sized key (string) to fixed size value</li>
+            <li class="fragment">JudySL - maps null terminated string to fixed size value</li>
+          </ul>
+        </section>
 
-      <section>
-        <p>The order of a digital tree is the number of branches that can be taken.</p>
-        <p class="fragment">A low order wastes less memory because fewer entries in each branch are null pointers.
-        <p class="fragment">However a low order tree is deeper and requires more indirections to decode the key.</p>
-      </section>
+        <section>
+          <h3>CPU cachelines</h3>
+          <p class="fragment">In a real machine main memory access is painfully slow, which is why memory is loaded into the CPU cache</p>
+          <p class="fragment">The amount of memory read and cached at a time is typically 16 machine words long</p>
+          <p class="fragment">Algorithms that want to be fast must be cache aware and be designed from the ground up to efficiently make use of the CPU cache</p>
+        </section>
 
-      <section>
-        <h3>CPU cachelines</h3>
-        <p class="fragment">In a real machine main memory access is painfully slow, which is why memory accesses are loaded into the CPU cache</p>
-        <p class="fragment">The amount of memory cached from a single read is typically 16 machine words long</p>
-        <p class="fragment">Algrithms that want to be fast must be cache aware and be designed from the ground up to efficiently make use of the CPU cache</p>
-      </section>
-
-      <section>
-        <img src="img/cachefills.png"/>
-      </section>
-
-      <section>
-        <h3>Judy</h3>
-        <p class="fragment">Judy uses order 256 branches for performance</p>
-        <p class="fragment">With vanilla tries this would waste a large amount of memory</p>
-        <p class="fragment">Judy uses a variety of tricks in order to compress the size of each branch or leaf depending on how 'full' it is</p>
-      </section>
-
-      <section>
-        <h3>Judy arrays come in 4 different flavours:</h3>
-        <ul class="fragment">
-          <li>Judy1 - maps fixed size key to binary true/false</li>
-          <li class="fragment">JudyL - maps fixed size key to fixed size value</li>
-          <li class="fragment">JudyHS - maps variable sized key (string) to fixed size value</li>
-          <li class="fragment">JudySL - maps null terminated string to fixed size value</li>
-        </ul>
+        <section>
+          <h3>Cache Fills by Order</h3>
+          <img src="img/cachefills.png"/>
+        </section>
       </section>
 
       <section>
         <h3>Judy1 and JudyL array internals</h3>
         <ul>
-          <li>Judy Array Pointer (JAP)</li>
+          <li>Array Pointer (JAP)</li>
           <li>Root leaves</li>
-          <li>Judy Population/Memory Node (JPM)</li>
-          <li>Judy Pointer (JP)</li>
-          <li>Judy Branches</li>
-          <li>Juay Leaves</li>
+          <li>Population/Memory Node (JPM)</li>
+          <li>Pointer (JP)</li>
+          <li>Branches</li>
+          <li>Leaves</li>
       </section>
 
       <section>
@@ -130,13 +152,13 @@
           <ul class="fragment">
             <li>Root pointer to the entire Judy array</li>
             <li class="fragment">Ordinary 1 word pointer</li>
-            <li class="fragment">Because it always references a 2 word aligned object, we can use the least 3 significant bits to encode the object type for free</li>
-            <li class="fragment">Can optimize for the case where there is only 1 or 2 indexes in the entire array, especially when there are a huge number of separate arrays</li>
+            <li class="fragment">Because it always references a 2 word aligned object, Judy uses the least 3 significant bits to encode the object type for free</li>
+            <li class="fragment">Can optimize for the case where there is only 1 or 2 indexes in the entire array, especially useful when there are a huge number of separate arrays</li>
           </ul>
         </section>
 
         <section>
-          <h3>Judy Arrap Pointer</h3>
+          <h3>Judy Array Pointer</h3>
           <img src="img/jap.png"></img>
         </section>
       </section>
@@ -145,7 +167,7 @@
         <section>
           <h3>Root Leaves</h3>
           <ul class="fragment">
-            <li>If population is small enough we store all the entries in a root level leaf</li>
+            <li>If population is small enough Judy stores all the entries in a root level leaf</li>
             <li class="fragment">The leaf is limited to 2 words for Judy1 and 4 words for JudyL</li>
           </ul>
         </section>
@@ -166,6 +188,7 @@
           <h3>Judy Population/Memory Node</h3>
           <ul class="fragment">
             <li>JPM used when Judy array's population is larger than 31 indices</li>
+            <li class="fragment">Replaces the root leaf</li>
             <li class="fragment">JPM is 10 words in size and includes total population counter, pointers to the first and last Judy Pointers as well as other information</li>
           </ul>
         </section>
@@ -190,8 +213,9 @@
         </section>
 
         <section>
+          <h3>Judy Pointers</h3>
           <p>A JP is always 2 words in size and can be thought of as a two element array</p>
-          <p>For null, branches or leaves the first word is a standard pointer to the next child, and the second word encodes the pointer type, as well as the bytes decoded so far (sans the first one) and the population count of the subexpanse</p>
+          <p class="fragment">For null, branches or leaves the first word is a standard pointer to the next child, and the second word encodes the pointer type, as well as the bytes decoded so far (sans the first one) and the population count of the subexpanse</p>
         </section>
 
         <section>
@@ -200,29 +224,48 @@
         </section>
 
         <section>
-          <h3>Immediate index</h3>
-          <p>This is an optimization when the population of the subexpanse is small</p>
-          <p>Instead of a further indirection to a leaf node to get the value, the values are 'immediately' packed into the pointer itself.</p>
-          <p>For JudyL a separate values only leaf is used as well</p>
+          <h3>Immediate Index</h3>
+          <p class="fragment">This is an optimization when the population of the subexpanse is small</p>
+          <p class="fragment">Instead of a further indirection to a leaf node to get the value, the values are 'immediately' packed into the pointer itself.</p>
+          <p class="fragment">For JudyL a separate values only leaf is used as well</p>
         </section>
 
         <section>
-          <h3>Immediate JPs</h3>
+          <h3>Immediate Index</h3>
           <img src="img/immediate-jp.png"></img>
         </section>
       </section>
 
       <section>
         <section>
-          <h3>Branch Compression Strategies</h3>
-          <p>A branch uses one of 3 possible strategies:</p>
-          <ul class="fragment">
-            <li>Linear - for sparse populations</li>
-            <li class="fragment">Bitmap - for typical populations</li>
-            <li class="fragment">Uncompressed - for dense populations</li>
-          </ul>
+          <h3>Where are we at?</h3>
+          <p class="fragment">We have the Array Pointer which points either to a Root Leaf or a JPM</p>
+          <p class="fragment">Root leaves allow a small number of items to be accessed directly</p>
+          <p class="fragment">Once the array grows larger the root leaf is replaced with JPM</p>
         </section>
 
+        <section>
+          <h3>Where are we at?</h3>
+          <p class="fragment">The JPM contains the array meta data and points to the first Judy Pointer</p>
+          <p class="fragment">A Judy Pointer is a fat pointer that either points to a branch or leaf, or if there are few enough items, directly encodes the items into the pointer</p>
+        </section>
+      </section>
+
+      <section>
+        <h2><i>People who deal with bits should expect to get bitten. - Jon Bentley</i></h2>
+      </section>
+
+      <section>
+        <h3>Branch Compression Strategies</h3>
+        <p>A branch uses one of 3 possible strategies:</p>
+        <ul class="fragment">
+          <li>Linear - for sparse populations</li>
+          <li class="fragment">Bitmap - for typical populations</li>
+          <li class="fragment">Uncompressed - for dense populations</li>
+        </ul>
+      </section>
+
+      <section>
         <section>
           <h3>Linear Branch</h3>
           <p class="fragment">Only 16 words long</p>
@@ -235,12 +278,14 @@
           <h3>Linear Branch</h3>
           <img src="img/linear-branch.png"/>
         </section>
+      </section>
 
+      <section>
         <section>
           <h3>Bitmap Branch</h3>
           <p class="fragment">Contains 2 tiers: the bitmap and subarrays</p>
           <p class="fragment">Bitmap is always 32 bytes long</p>
-          <p class="fragment">Contains 8 bitmap subexpanses and 8 Judy pointers to thesubarray</p>
+          <p class="fragment">Contains 8 bitmap subexpanses and 8 Judy pointers to the subarray</p>
           <p class="fragment">Subarray consists of packed list of Judy pointers, one for each bit set in the parent bitmap</p>
         </section>
 
@@ -250,10 +295,12 @@
         </section>
 
         <section>
-          <p>Two tiers are used to keep the size of the bitmap so that it will within 16 words for efficient inserts and deletes</p>
+          <p>Two tiers are used to keep the size of the bitmap so that it will fit within 16 words for efficient inserts and deletes</p>
           <p class="fragment">The pointers to subarrays are interspersed so that on machines with 8 word cache lines the number of fills is reduced</p>
         </section>
+      </section>
 
+      <section>
         <section>
           <h3>Uncompressed Branch</h3>
           <span class="fragment">
@@ -264,19 +311,25 @@
       </section>
 
       <section>
-        <section>
-          <h3>Leaf Compression Strategies</h3>
-          <p>A leaf uses 1 one two possible strategies:</p>
-          <ul>
-            <li>Linear - again for sparse populations</li>
-            <li>Bitmap - for medium and dense populations</li>
-          </ul>
-        </section>
+        <h2><i>Now on to the raking...</i></h2>
+      </section>
+
+      <section>
+        <h3>Leaf Compression Strategies</h3>
+        <p>A leaf uses 1 one two possible strategies:</p>
+        <ul class="fragment"> 
+          <li>Linear - again for sparse populations</li>
+          <li class="fragment">Bitmap - for medium and dense populations</li>
+        </ul>
+      </section>
+
+
+      <section>
 
         <section>
           <h3>Linear Leaf</h3>
-          <p>A packed array of indexes stored in sorted order that contain only the minimum number of bytes remaining to be decoded at the leaf's level in the tree</p>
-          <p>In addition JudyL leaves have a separate value area that is 1 word for each index</p>
+          <p class="fragment">A packed array of indexes stored in sorted order that contain only the minimum number of bytes remaining to be decoded at the leaf's level in the tree</p>
+          <p class="fragment">In addition JudyL leaves have a separate value area that is 1 word for each index</p>
 
         </section>
 
@@ -290,10 +343,14 @@
           <img src="img/linear-judyl-leaves.png"></img>
         </section>
 
+      </section>
+
+      <section>
+
         <section>
           <h3>Bitmap Leaf</h3>
-          <p>At the lowest level of the tree when there is on a single byte left to decode and sufficient population it saves memory to represent each index in the subexpanse as a bit in a 256 bit bitmap</p>
-          <p>For JudyL value subarrays are interspersed with the bitmap entries</p>
+          <p class="fragment">At the lowest level of the tree when there is only a single byte left to decode and sufficient population it saves memory to represent each index in the subexpanse as a bit in a 256 bit bitmap</p>
+          <p class="fragment">For JudyL value subarrays are interspersed with the bitmap entries</p>
         </section>
 
         <section>
@@ -308,34 +365,61 @@
       </section>
 
       <section>
-        <p>Using these 'tricks' the memory footprint of an order 256 trie can be significantly reduced</p>
-        <h3><i>People who deal with bits should expect to get bitten. - Jon Bentley</i></h3>
+        <h3>Using these 'tricks' the memory footprint of an order 256 trie can be significantly reduced</h3>
+      </section>
+
+      <section>
+        <h2><i>Half of what we taught you is wrong -- and we don’t know which half. -- Neifert</i></h2>
       </section>
 
       <section>
         <h3>When to use Judy</h3>
         <ul class="fragment">
-          <li></li>
+          <li>Large, sparse data sets</li>
+          <li class="fragment">Unpredictable data, both in density and pattern</li>
+          <li class="fragment">Judy works better on semi sequential data rather than pure random</li>
+          <li class="fragment">Want relatively predictable operations with low latency</li>
         </ul>
+      </section>
+
+      <section>
+        <h3>Performance</h3>
+        <img src="img/semi-log.gif"></img>
+        <p>Source: <a href="http://nothings.org/computer/judy/">http://nothings.org/computer/judy/</a></p>
+      </section>
+
+      <section>
+        <h3>Memory</h3>
+        <img src="img/memory-use.gif"></img>
+        <p>Source: <a href="http://nothings.org/computer/judy/">http://nothings.org/computer/judy/</a></p>
       </section>
 
       <section>
         <h3>Implementation</h3>
         <ul class="fragment">
-          <li>Original implementation written by a team of engineers at HP</li>
-          <li>20000 LO C code</li>
-          <li>Released under the LGPL license</li>
-          <li>Another implementation of Judy arrays was done in only 1250 LOC</li>
+          <li>Invented by Doug Baskins while working at HP, he named it after his sister</li>
+          <li class="fragment">Original implementation written by a team of engineers at HP</li>
+          <li class="fragment">20000 LOC</li>
+          <li class="fragment">Released under the LGPL license</li>
+          <li class="fragment">Alternate implementation of Judy arrays done in only 1250 LOC</li>
         </ul>
       </section>
 
       <section>
         <h3>Perl Example</h3>
-        <pre class="code">
-        </pre>
       </section>
 
       <section>
+        <h2>Questions?</h2>
+      </section>
+
+      <section>
+        <h3>Links</h3>
+        <a href="http://judy.sourceforge.net/doc/shop_interm.pdf">Judy Shop Manual</a><br/>
+        <a href="http://judy.sourceforge.net/">Official Judy Website</a><br/>
+        <a href="http://nothings.org/computer/judy/">Judy Performance Comparison</a><br/>
+        <a href="http://sourceforge.net/p/judy/mailman/judy-devel/">Judy Mailing List</a><br/>
+        <a href="https://code.google.com/p/judyarray/">1250 LOC Judy Implementation</a><br/>
       </section>
 
 
@@ -343,10 +427,16 @@
   </div>
 
   <style>
+    ul {
+      list-style: none !important;
+    }
+
+    ul li:before {
+      content: "\00BB \0020";
+    }
   </style>
 
 
-  <script src="js/Chart.min.js"></script>
   <script src="lib/js/head.min.js"></script>
   <script src="js/reveal.js"></script>
   <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
@@ -354,106 +444,6 @@
   <script>
     // Required, even if empty.
     Reveal.initialize({
-    });
-
-
-    function renderPL(params)
-    {
-      var data, options, section, i, table, row, div, tdiv, cdiv, canvas, ctx;
-
-      var zero = [];
-      for (i = 0; i < params.optionPL.length; i++) {
-        zero.push(0);
-      }
-
-
-      data = {
-        labels: params.strikes,
-        datasets: [
-          {
-            data: zero,
-            strokeColor: "rgba(200, 200, 200, 1)",
-            fillColor: "rgba(120,120,120,0)",
-            pointColor: "rgba(50,50,50,0)",
-          },
-          {
-            data: params.optionPL,
-            fillColor: "rgba(120,120,120,0.2)",
-            strokeColor: "rgba(50,50,50,1)",
-            pointColor: "rgba(50,50,50,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)"
-          },
-        ]
-      };
-
-      if (params.stockPL) {
-        data.datasets.push({
-            data: params.stockPL,
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)"
-          })
-      };
-
-      options = {
-        bezierCurve: false,
-        pointDot: false
-      };
-
-      section = $('#' + params.id);
-
-      section.addClass('strategy');
-      section.append($('<h3>').html(params.title));
-
-      div = $('<div class="container">');
-
-      tdiv = $('<div class="table">');
-
-      table = $('<table>');
-      row = $('<tr>');
-      row.append($('<th>').html('Price at Expiration'));
-      row.append($('<th>').html('Options'));
-      if (params.stockPL) {
-        row.append($('<th>').html('Stock Only'));
-      }
-      table.append(row);
-
-      for (i = 0; i < params.strikes.length; i++)
-      {
-        row = $('<tr>');
-        row.append($('<td>').html(params.strikes[i]));
-        row.append($('<td>').html(params.optionPL[i]));
-        if (params.stockPL) {
-          row.append($('<td>').html(params.stockPL[i]));
-        }
-
-        table.append(row);
-      }
-
-      tdiv.append(table);
-
-      cdiv = $('<div class="graph">').append($('<canvas>'));
-
-      div.append(tdiv);
-      div.append(cdiv);
-
-      section.append(div);
-
-
-      canvas = $($('#' + params.id + ' canvas')[0]);
-      canvas.prop('height', $($('.slides section')[0]).height() * 1.25);
-      canvas.prop('width', $($('.slides section')[0]).width() / 2);
-
-      ctx = $('#' + params.id + ' canvas')[0].getContext("2d");
-      new Chart(ctx).Line(data, options);
-    }
-
-    $(document).ready(function() {
     });
   </script>
 </body>
