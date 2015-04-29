@@ -401,58 +401,6 @@
           <h3>Perl Example</h3>
         </section>
 
-        <section>
-          <pre>
-package Differ;
-
-use autodie;
-use common::sense;
-use Readonly;
-
-use Judy::1 qw<Count First Get Next Set>;
-use List::Util qw<min>;
-
-Readonly my $BUFFER_SIZE => 64 * 1024;
-
-sub process
-{
-    my ($fh1, $fh2) = @_;
-
-    my $lhs;
-    my $rhs;
-
-    my $index = 0;
-    my $result;
-
-    while(1)
-    {
-        my $lhs_size = read($fh1, $lhs, $BUFFER_SIZE);
-        my $rhs_size = read($fh2, $rhs, $BUFFER_SIZE);
-
-        if (!$lhs_size || !$rhs_size)
-        {
-            last;
-        }
-
-        my $bit = 0;
-        my $char = 0;
-        for (0..min($lhs_size, $rhs_size) * 8)
-        {
-            if (vec($lhs, $bit, 1) == vec($rhs, $bit, 1))
-            {
-                Set($result, $index);
-            }
-            $bit++;
-            $index++;
-        }
-    }
-
-    return $result;
-}
-
-1;
-          </pre>
-        </section>
       </section>
 
       <section>
