@@ -27,12 +27,12 @@
       <section>
 
         <section>
-          <h2>From the manual:</h2>
-          <h4><i>Judy is a programming library that provides a relatively simple interface (API) for array-like storage of word or string indexes</i></h4>
+          <h3>From the manual:</h3>
+          <i>Judy is a programming library that provides a relatively simple interface (API) for array-like storage of word or string indexes</i>
         </section>
 
         <section>
-          <h4><i>Judy arrays are remarkably fast, space- efficient, and simple to use. No initialization, configuration, or tuning is required or even possible, yet Judy works well over a wide dynamic range from zero to billions of indexes, over a wide variety of types of data sets -- sequential, clustered, periodic, random.</i></h4>
+          <i>Judy arrays are remarkably fast, space- efficient, and simple to use. No initialization, configuration, or tuning is required or even possible, yet Judy works well over a wide dynamic range from zero to billions of indexes, over a wide variety of types of data sets -- sequential, clustered, periodic, random.</i>
         </section>
 
       </section>
@@ -66,12 +66,6 @@
             <li class="fragment">Can reallocate the hash once it gets too full but this is costly and introduces unpredictable latency</li>
         </section>
 
-        <section>
-          <h3>Terms</h3>
-
-          <h4 class="fragment">Population: The set of elements stored in the datastructure</h4>
-          <h4 class="fragment">Expanse: The range of possible keys that can address the datastructure</h4>
-        </section>
       </section> 
 
       <section>
@@ -108,6 +102,7 @@
         <section>
           <h3>Judy</h3>
           <p class="fragment">Judy uses order 256 branches for performance</p>
+          <p class="fragment">For a 32 bit expanse this translates to a maximum of 4 lookups</p>
           <p class="fragment">With vanilla tries this would waste a large amount of memory</p>
           <p class="fragment">Judy uses a variety of 'tricks' in order to compress the size of each branch or leaf depending on how 'full' it is</p>
         </section>
@@ -365,11 +360,7 @@
       </section>
 
       <section>
-        <h3>Using these 'tricks' the memory footprint of an order 256 trie can be significantly reduced</h3>
-      </section>
-
-      <section>
-        <h2><i>Half of what we taught you is wrong -- and we don’t know which half. -- Neifert</i></h2>
+        <h2><i>Half of what we taught you is wrong -- and we don’t know which half</i></h2>
       </section>
 
       <section>
@@ -406,7 +397,62 @@
       </section>
 
       <section>
-        <h3>Perl Example</h3>
+        <section>
+          <h3>Perl Example</h3>
+        </section>
+
+        <section>
+          <pre>
+package Differ;
+
+use autodie;
+use common::sense;
+use Readonly;
+
+use Judy::1 qw<Count First Get Next Set>;
+use List::Util qw<min>;
+
+Readonly my $BUFFER_SIZE => 64 * 1024;
+
+sub process
+{
+    my ($fh1, $fh2) = @_;
+
+    my $lhs;
+    my $rhs;
+
+    my $index = 0;
+    my $result;
+
+    while(1)
+    {
+        my $lhs_size = read($fh1, $lhs, $BUFFER_SIZE);
+        my $rhs_size = read($fh2, $rhs, $BUFFER_SIZE);
+
+        if (!$lhs_size || !$rhs_size)
+        {
+            last;
+        }
+
+        my $bit = 0;
+        my $char = 0;
+        for (0..min($lhs_size, $rhs_size) * 8)
+        {
+            if (vec($lhs, $bit, 1) == vec($rhs, $bit, 1))
+            {
+                Set($result, $index);
+            }
+            $bit++;
+            $index++;
+        }
+    }
+
+    return $result;
+}
+
+1;
+          </pre>
+        </section>
       </section>
 
       <section>
@@ -427,6 +473,10 @@
   </div>
 
   <style>
+    img {
+      max-height: 550px !important;
+    }
+
     ul {
       list-style: none !important;
     }
