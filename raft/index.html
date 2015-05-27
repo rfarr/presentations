@@ -30,7 +30,7 @@
         </section>
 
         <section>
-          <h3>You need to a state machine with the following properties:</h3>
+          <h3>You need a state machine with the following properties:</h3>
           <ul class="fragment">
             <li><strong>Replicated</strong> - avoid data loss</li>
             <li class="fragment"><strong>Highly Available </strong>- avoid downtime on node failure</li>
@@ -119,7 +119,7 @@
         </section>
 
         <section>
-          <i>It is legal because I wish it</i> - Louie XIV
+          <i>"I am the state."</i> - Louie XIV
         </section>
 
         <section>
@@ -166,23 +166,28 @@
           <ul class="fragment">
             <li>All nodes begin life as followers</li>
             <li class="fragment">They remain followers as long as they <strong>receive valid RPCs from leaders or candidates</strong></li>
-            <li class="fragment">If a follower doesn't hear from others for a period of time (the <strong>election timeout</strong>, they assume the leader is dead</li>
+            <li class="fragment">If a follower doesn't hear from others for a period of time (the <strong>election timeout</strong>), they assume the leader is dead</li>
             <li class="fragment">The follower increments its term number, <strong>switches to candidate state</strong>, votes for itself and issues RequestVote RPCs to all other nodes</li>
             <li class="fragment">A candidate remains in this state until it either wins the election, another node establishes itself as leader, or a period of time goes by with no winner</li>
           </ul>
         </section>
 
         <section>
+          <h3>Node Transitions</h3>
+          <img id="transitions" src="img/transitions.png"></img>
+        </section>
+
+        <section>
           <h3>Winning the Election</h3>
           <ul class="fragment">
             <li>When a node receives a RequestVote it votes on a <strong>first come, first serve</strong> basis for that candidate for that particular term</li>
-            <li>If a candidate receives a majority of votes it <strong>considers itself leader</strong> and issues heartbeats to <strong>establish its authority</strong> with the other nodes</li>
+            <li class="fragment">If a candidate receives a majority of votes it <strong>considers itself leader</strong> and issues heartbeats to <strong>establish its authority</strong> with the other nodes</li>
             <li class="fragment">By allowing only one vote per term and requiring majority rule, the system guarantees that their is <strong>only one leader at a time</strong></li>
           </ul>
         </section>
 
         <section>
-          <i>A multitude of rulers is not a good thing. Let there be one ruler, one king.</i> - Homer
+          <i>"A multitude of rulers is not a good thing."</i> - Homer
         </section>
 
         <section>
@@ -204,12 +209,7 @@
         </section>
 
         <section>
-          hanging chad
-        </section>
-
-        <section>
-          <h3>Node Transitions</h3>
-          <img id="transitions" src="img/transitions.png"></img>
+            <img src="img/chad.jpg"></img>
         </section>
       </section>
 
@@ -223,7 +223,7 @@
           <ul class="fragment">
             <li>The leader receives client requests with contain a <strong>command that will be executed</strong> upon the state machine</li>
             <li class="fragment">The leader appends the command to <strong>its log</strong> and then issues AppendLog RPCs in <strong>parallel</strong> to the other nodes</li>
-            <li class="fragment">Once a <strong>majority of the nodes responds</strong> the leader commits the entry and <strong>executes the command</strong>, returning the result to the client</li>
+            <li class="fragment">Once a <strong>majority of the nodes responds</strong>, the leader commits the entry and <strong>executes the command</strong>, returning the result to the client</li>
           </ul>
         </section>
 
@@ -243,25 +243,25 @@
 
         <section>
           <h3>Log Matching Properties</h3>
+        </section>
+
+        <section>
           <p><strong>PROPOSITION 1: </strong>If two entries in different logs have the same index and term then they <strong>store the same command</strong></p>
         </section>
 
         <section>
-          <h3>Log Matching Properties</h3>
-          <ul class="fragment">
+          <ul>
             <li>This follows from the fact that each leader is guaranteed to create at most <strong>one log entry with a given log index</strong> for a given term</li>
             <li class="fragment">Also logs are <strong>never reordered</strong></li>
           </ul>
         </section>
 
         <section>
-          <h3>Log Matching Properties</h3>
-          <p><strong>PROPOSITION 2: </strong>If two entries in different logs have the same index and term the the logs are identical in <strong>all preceeding entries</strong></p>
+          <p><strong>PROPOSITION 2: </strong>If two entries in different logs have the same index and term then the logs are identical in <strong>all preceeding entries</strong></p>
         </section>
 
         <section>
-          <h3>Log Matching Properties</h3>
-          <ul class="fragment">
+          <ul>
             <li>This is guaranteed by a <strong>consistency check</strong> in AppendLog.</li>
             <li class="fragment">Leaders include the <strong>previous term and log index</strong> of the entry that <strong>preceeds</strong> the new entries.</li>
             <li class="fragment">Followers will only apply logs if these <strong>match</strong> its previous as well</li>
@@ -274,12 +274,19 @@
           <ul class="fragment">
             <li>If leaders crash routinely then it is possible for an <strong>inconsistent state</strong> to occur when a new leader comes to power</li>
             <li class="fragment">Followers can be <strong>missing</strong> logs that the leader has, have <strong>additional</strong> logs that leader doesn't have or <strong>both</strong></li>
-            <li class="fragment">Raft solves this by <strong>forcing</strong> all the followers' logs to be <strong>overriden</strong> by the leader's logs</li>
+            <li class="fragment">Raft solves this by <strong>forcing</strong> all the followers' logs to be <strong>overridden</strong> by the leader's logs</li>
             <li class="fragment">While by itself this would not guarantee consistent commit order across the nodes, by adding <strong>additional restrictions</strong> on who can become elected leader this will in fact work</li>
           <ul>
         </section>
 
         <section>
+          <h3>Election Restriction</h3>
+          <ul class="fragment">
+            <li>Raft only allows candidates who contain all the <strong>committed</strong> entries for <strong>previous terms</strong> to become leaders</li>
+            <li class="fragment">This is enforced by having candidates provide their latest term and index to voters in the <strong>RequestVote</strong> RPC</li>
+            <li class="fragment">Voters will <strong>reject candidates</strong> whose term is either <strong>less</strong> than theirs or who have a <strong>shorter log chain</strong> for the current term</li>
+            <li class="fragment">This ensures only candidates with all committed entries can become the much desired <strong>Il Duce</strong></li>
+          </ul>
         </section>
 
         <section>
@@ -298,38 +305,75 @@
       </section>
 
       <section>
-        <p>We have seen the basics of Raft.  In the next section we'll see some wrinkles</p>
-      </section>
-
-      <section>
-
         <section>
-          <h3>Safety</h3>
+          <h3>The Client's View of the World</h3>
           <ul class="fragment">
+            <li>Clients need to be aware of which servers are in the cluster</li>
+            <li class="fragment">On startup they <strong>randomly pick</strong> a node and connect to it until they are redirected to the leader</li>
+            <li class="fragment">If a client request times out it again picks a node at random</li>
+            <li class="fragment">A problem arises: what if a leader commits a request but then crashes <strong>before replying</strong> to the client?</li>
           </ul>
         </section>
 
         <section>
-          <h3>Election Restriction</h3>
+          <ul>
+              <li>From the client's perspective nothing happened so it will try again causing <strong>double execution</strong></li>
+            <li class="fragment">To solve this each client request has a <strong>unique serial number</strong> attached</li>
+            <li class="fragment">When the client makes a duplicate request the node recognizes this and just replies back with the <strong>previous response</strong></li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Read only requests</h3>
           <ul class="fragment">
-            <li>Raft only allows candidates who contain all the i<strong>committed</strong> entries for <strong>previous terms</strong> to become leaders</li>
-            <li class="fragment">This is enforced by having candidates provide their latest term and index to voters in the <strong>RequestVote</strong> RPC</li>
-            <li class="fragment">Voters will <strong>reject candidates</strong> whose term is either <strong>less</strong> than theirs or who have a <strong>shorter log chain</strong> for the current term</li>
-            <li class="fragment">This ensures only candidates with all committed entries can become Il Duce</li>
+            <li>What if a client makes a read only request to the cluster?</li>
+            <li class="fragment">A leader could have <strong>stale</strong> information if it was unknowingly deposed</li>
+            <li class="fragment">To solve this on read only requests the leader must <strong>exchange heartbeats</strong> with the majority of the cluster before responding</li>
           </ul>
         </section>
       </section>
 
       <section>
+          <h3>Configuration Changes</h3>
+          <ul class="fragment">
+            <li>Raft allows the cluster configuration to be altered without having to restart the system</li>
+            <li class="fragment">It is not possible to <strong>atomically</strong> switch all servers at once</li>
+            <li class="fragment">A two phase system is used where where the old and new configuration run in i<strong>parallel</strong></li>
+            <li class="fragment">While in transition a majority from <strong>both</strong> configurations is required</li>
+            <li class="fragment">As each server receives the new configuration it switches over, eventually the old config is replaced</li>
+          </ul>
       </section>
 
+      <section>
+          <h3>Log Compaction</h3>
+          <ul class="fragment">
+            <li>In a long running system the logs can grow to be quite large</li>
+            <li class="fragment">Raft supports the creation of <strong>snapshots</strong> that allow truncating old logs</li>
+            <li class="fragment">Each server independently take their own snapshot</li>
+            <li class="fragment">The only quirk is that the leader needs to be able to send <strong>its own</strong> snapshot to followers if they fall too far behind</li>
+          </ul>
+      </section>
 
       <section>
-        <h2>Questions?</h2>
+          <h3>Putting it all together</h3>
+          <p>Courtesy of <a href="http://thesecretlivesofdata.com/raft/">The Secret Lives of Data</a></p>
+      </section>
+
+      <section>
+          <i>"A picture is worth a thousand words"</i> - Unknown
+      </section>
+
+      <section>
+        <h2>Questions, Concerns, Comments or Grievances?</h2>
       </section>
 
       <section>
         <h3>Links</h3>
+        <ul>
+          <li><a href="https://raftconsensus.github.io/">The Raft Consensus Algorithm</a></li>
+          <li><a href="http://thesecretlivesofdata.com/raft/">Raft Visualization</a></li>
+        </ul>
+        <p>This presentation and others are availble at <a href="http://github.com/rfarr/presentations">http://github.com/rfarr/presentations</a></p>
       </section>
 
 
@@ -345,13 +389,13 @@
       height: 500px;
     }
 
-//    ul {
-//      list-style: none !important;
-//    }
+    #transitions {
+      height: 300px;
+    }
 
-//    ul li:before {
-//      content: "\00BB \0020";
-//    }
+    #terms {
+      height: 300px;
+    }
   </style>
 
 
