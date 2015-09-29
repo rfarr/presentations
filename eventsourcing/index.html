@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Event Sourcing</title>
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/serif.css" id="theme">
+  <!--Add support for earlier versions of Internet Explorer -->
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <!-- Wrap the entire slide show in a div using the "reveal" class. -->
+  <div class="reveal">
+    <!-- Wrap all slides in a single "slides" class -->
+    <div class="slides">
+
+      <!-- ALL SLIDES GO HERE -->
+      <!-- Each section element contains an individual slide -->
+      <section>
+        <h1>Event Sourcing</h1>
+      </section>
+
+      <section>
+        <h3>A Typical Day at the Office...</h3>
+      </section>
+
+      <section>
+        <h3>You're working on some leet software</h3>
+        <ul class="fragment">
+          <li>Like a cool cat your using NoSQL databases to store and manipulate documents</li>
+          <li class="fragment">At the click of the user you effortlessly and magnificiently perform eventually consistent CRUD operations</li>
+          <li class="fragment">Confident that somewhere, out there, <i>all</i> your data is safe (hopefully) and up to date</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Or maybe you actually care about your data</h3>
+        <ul class="fragment">
+          <li>You know that God intended ACID to be the only drug of choice for data</li>
+          <li class="fragment">Transactions, rows, and third normals oh my</li>
+          <li class="fragment">You know <i>all</i> your data is safe and consistent at all times</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Uh oh, your boss walks up to you...</h3>
+      </section>
+
+      <section>
+        <h3>"I want to ask you a bunch of questions, and I want to have them answered immediately!"</h3>
+      </section>
+
+      <section>
+        <ul>
+          <li>Q: "What product(s) do our customers remove from their cart within a few minutes of checking out?"</li>
+          <li class="fragment">A: "Uh.. we don't have that data... we can build and deploy some code to do that within the next iteration or so, talk to my PM and we can prioritize it."</li>
+        </ul>
+      </section>
+
+      <section>
+        <ul>
+          <li>Q: "What exactly did Mr. Snowden access and what actions did he take between these dates three years ago?"</li>
+          <li class="fragment">A: "Uh, we'll need to trace through several hundred gigs of logs to get a gist.  Gee, we should have spent time building and maintaining an audit log!"</li>
+        </ul>
+      </section>
+
+      <section>
+        <ul>
+          <li>Q: "One of our biggest clients just found a bug that prevented them from placing a trade for a few minutes but then it went away, can you fix it?"</li>
+          <li class="fragment">A: "Can't reproduce."</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>You have all this data... why is this happening?</h3>
+      </section>
+
+      <section>
+        <h3>You missed some crucial facts:</h3>
+        <h2 class="fragment">State Transitions</h2>
+      </section>
+
+      <section>
+        <h3>Your perfectly polished data is simply an aggregate of all previous CRUD operations</h3>
+      </section>
+
+      <section>
+        <h3>How, when and <b>why</b> did your data get into its current state?</h3>
+        <h5 class="fragment">"Check the log?"</h5>
+      </section>
+
+      <section>
+        <h3>You need to treat state <b>transitions</b> as your system of record, not whatever state you currently happen to be in!</h3>
+      </section>
+
+      <section>
+        <h3>With event sourcing you record every single event that mutates state in an append only log</h3>
+        <ul class="fragment">
+          <li><b>Crucially</b> all state mutation in your program must occur as the direct result of the application of these events</li>
+          <li class="fragment">It's <b>not</b> an audit log, it's the actual sequence of events that when input to your program will reproduce exactly the same state everytime</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Conceptually break your program into two parts:</h3>
+        <ul class="fragment">
+          <li>The first takes your current program state, an input command, and decides on a course of action.  It <b>publishes</b> an output event, it does not mutate program state all!</li>
+          <li class="fragment">The second part of your program simply takes the output event and <b>applies</b> it to your current state to mutate it.</li>
+        </ul>
+      </section>
+
+      <section>
+        functions
+      </section>
+
+      <section>
+        <h3>By decoupling the "decision" from the "action" you now have an unbroken stream of state updates that capture the entire history of execution</h3>
+      </section>
+
+      <section>
+        <h3>You record this stream of events as the system of record in an append only log.  Once published they are immutable and unchangeable.</h3>
+      </section>
+
+      <section>
+        <h3>How do I query this data?</h3>
+      </section>
+
+      <section>
+        <h3>Isn't that too much data?</h3>
+      </section>
+
+      <section>
+        <h3>Won't it take a long time to boot the system?</h3>
+      </section>
+
+
+      <section>
+        <h2>Questions?</h2>
+      </section>
+
+      <section>
+        <h3>Links</h3>
+        <ul>
+          <li><a href="https://raftconsensus.github.io/">The Raft Consensus Algorithm</a></li>
+          <li><a href="http://thesecretlivesofdata.com/raft/">Raft Visualization</a></li>
+        </ul>
+        <p>This presentation and others are availble at <a href="http://github.com/rfarr/presentations">http://github.com/rfarr/presentations</a></p>
+      </section>
+
+
+      </div>
+  </div>
+
+  <style>
+    img {
+      max-height: 550px !important;
+    }
+
+    #rsm {
+      height: 500px;
+    }
+
+    #transitions {
+      height: 300px;
+    }
+
+    #terms {
+      height: 300px;
+    }
+  </style>
+
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+  <script>
+    // Required, even if empty.
+    Reveal.initialize({
+    });
+  </script>
+</body>
+</html>
