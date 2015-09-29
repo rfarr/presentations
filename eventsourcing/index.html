@@ -29,20 +29,20 @@
 
       <section>
         <h3>You're working on some leet software</h3>
-        <ul class="fragment">
+        <ul>
           <li>Like a cool cat your using NoSQL databases to store and manipulate documents</li>
-          <li class="fragment">At the click of the user you effortlessly and magnificiently perform eventually consistent CRUD operations</li>
-          <li class="fragment">Confident that somewhere, out there, <i>all</i> your data is safe (hopefully) and up to date</li>
         </ul>
       </section>
 
       <section>
         <h3>Or maybe you actually care about your data</h3>
-        <ul class="fragment">
+        <ul>
           <li>You know that God intended ACID to be the only drug of choice for data</li>
-          <li class="fragment">Transactions, rows, and third normals oh my</li>
-          <li class="fragment">You know <i>all</i> your data is safe and consistent at all times</li>
         </ul>
+      </section>
+
+      <section>
+        <h3>Either way you work with CRUD everyday!</h3>
       </section>
 
       <section>
@@ -62,7 +62,7 @@
 
       <section>
         <ul>
-          <li>Q: "What exactly did Mr. Snowden access and what actions did he take between these dates three years ago?"</li>
+          <li>Q: "What exactly did Mr. Snowden access between 2011 and 2012?"</li>
           <li class="fragment">A: "Uh, we'll need to trace through several hundred gigs of logs to get a gist.  Gee, we should have spent time building and maintaining an audit log!"</li>
         </ul>
       </section>
@@ -98,42 +98,17 @@
 
       <section>
         <h3>With event sourcing you record every single event that mutates state in an append only log</h3>
-        <ul class="fragment">
+        <ul>
           <li><b>Crucially</b> all state mutation in your program must occur as the direct result of the application of these events</li>
-          <li class="fragment">It's <b>not</b> an audit log, it's the actual sequence of events that when input to your program will reproduce exactly the same state everytime</li>
+          <li>It's <b>not</b> an audit log, it's the actual sequence of events that when input to your program will reproduce exactly the same state everytime</li>
         </ul>
       </section>
 
       <section>
         <h3>Conceptually break your program into two parts:</h3>
-        <ul class="fragment">
+        <ul>
           <li>Decision logic - given current state and an input command, decide on a course of action as an output event.</li>
-          <li class="fragment">Mutation logic - given current state and an output event, apply the event to the current state to arrive at a new state.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h3>By decoupling the "decision" from the "action" you now have an unbroken stream of state updates that capture the entire history of execution</h3>
-        <ul class="fragment">
-          <li>Just looking at this stream of events is enough to reconstruct the application state at any point time.</li>
-          <li class="fragment">All inputs that can modify state <b>must</b> be included: config changes, time trigger events, callouts to external systems.</li>
-          <li class="fragment">Unlike homeopathy, even an atom of non-determinism means the system can enter an unedfined state.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h3>Primary system of record is the immutable stream of events</h3>
-        <ul class="fragment">
-          <li>Can never "undo" or "modify".</li>
-          <li class="fragment">Use additional "correction" events if you need to ameloriate a broken system.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h3>In order to efficiently query the system you will need to aggregate events into a traditional database</h3>
-        <ul class="fragment">
-          <li>Allows creating specific read models based the needs of client (ie BI, Operations, Finance, etc)</li>
-          <li class="fragment">This "aggregate" can be dumped and rebuilt at any time if needed</li>
+          <li>Mutation logic - given current state and an output event, apply the event to the current state to arrive at a new state.</li>
         </ul>
       </section>
 
@@ -152,8 +127,7 @@
 
       <section>
         <h3>Typical CRUD</h3>
-        <pre><code>
-sub add_item_to_cart {
+        <pre><code>sub add_item_to_cart {
   my $item = shift;
 
   # Check if user can add this item
@@ -173,38 +147,28 @@ sub add_item_to_cart {
 
       <section>
         <h3>Event Decision</h3>
-        <pre><code>
-sub add_item_to_cart {
+        <pre><code>sub add_item_to_cart {
     my $item = shift;
 
-    my $evt;
     # Determine if user can add this item
     if ($some_condition) {
-      # Item added
-      $evt = {
+      $return {
         command => 'item_added_to_cart',
         item_id => 123,
         quantity => 3,
       };
     }
-    else {
-      # Not able to add item
-      $evt  = {
-        command => 'rejected_add_item_to_cart',
-        error => 'Not in stock'
-      };
-    }
-
-    # Append event to log
-    $dbh->do(qq{INSERT into events values( ... evt details ...)});
+    return  {
+      command => 'rejected_add_item_to_cart',
+      error => 'Not in stock'
+    };
 }
         </pre></code>
       </section>
 
       <section>
       <h3>Event Application</h3>
-        <pre><code>
-sub item_added {
+        <pre><code>sub item_added {
     my $event = shift;
 
     # Mutate in memory shopping cart
@@ -221,11 +185,37 @@ sub item_add_rejected {
       </section>
 
       <section>
-        <h3>What next?</h3>
+        <h3>By decoupling the "decision" from the "action" you now have an unbroken stream of state updates that capture the entire history of execution</h3>
+        <ul class="fragment">
+          <li>Just looking at this stream of events is enough to reconstruct the application state at any point time.</li>
+          <li class="fragment">All inputs that can modify state <b>must</b> be included: config changes, time trigger events, callouts to external systems.</li>
+          <li class="fragment">Unlike homeopathy, even an atom of non-determinism means the system can enter an unedfined state.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Primary system of record is the immutable stream of events</h3>
+        <ul class="fragment">
+          <li>Can never "undo" or "modify".</li>
+          <li>Use additional "correction" events if you need to ameloriate a broken system.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>In order to efficiently query the system you will need to aggregate events into a traditional database</h3>
+        <ul class="fragment">
+          <li>Allows creating specific read models based the needs of client (ie BI, Operations, Finance, etc)</li>
+          <li>This "aggregate" can be dumped and rebuilt at any time if needed</li>
+        </ul>
+      </section>
+
+
+      <section>
+        <h3>Further Thoughts</h3>
         <ul class="fragment">
           <li>How to deal with datamodel changes?</li>
-          <li class="fragment">Isn't that too much data?</li>
-          <li class="fragment">Won't it take a long time to replay all events?</li>
+          <li>Isn't that too much data?</li>
+          <li>Won't it take a long time to replay all events?</li>
         </ul>
       </section>
 
@@ -239,7 +229,7 @@ sub item_add_rejected {
           <li><a href="http://www.martinfowler.com/eaaDev/EventSourcing.html">Quick Intro to Event Sourcing</a></li>
           <li><a href="https://github.com/eventstore/eventstore/wiki/Event-Sourcing-Basics">Event Sourcing Basics</a></li>
         </ul>
-        <p>This presentation and others are availble at <a href="http://github.com/rfarr/presentations">http://github.com/rfarr/presentations</a></p>
+        <p>This presentation and others are available at <a href="http://github.com/rfarr/presentations">http://github.com/rfarr/presentations</a></p>
       </section>
 
 
@@ -247,8 +237,8 @@ sub item_add_rejected {
   </div>
 
   <style>
-    img {
-      max-height: 550px !important;
+    code {
+      max-height: 550px;
     }
   </style>
 
@@ -260,6 +250,8 @@ sub item_add_rejected {
   <script>
     // Required, even if empty.
     Reveal.initialize({
+      history: true,
+      slideNumber: true
     });
   </script>
 </body>
