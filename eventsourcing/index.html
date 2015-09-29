@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Event Sourcing</title>
   <link rel="stylesheet" href="css/reveal.css">
-  <link rel="stylesheet" href="css/theme/serif.css" id="theme">
+  <link rel="stylesheet" href="css/theme/simple.css" id="theme">
   <!--Add support for earlier versions of Internet Explorer -->
   <!--[if lt IE 9]>
   <script src="lib/js/html5shiv.js"></script>
@@ -107,35 +107,127 @@
       <section>
         <h3>Conceptually break your program into two parts:</h3>
         <ul class="fragment">
-          <li>The first takes your current program state, an input command, and decides on a course of action.  It <b>publishes</b> an output event, it does not mutate program state all!</li>
-          <li class="fragment">The second part of your program simply takes the output event and <b>applies</b> it to your current state to mutate it.</li>
+          <li>Decision logic - given current state and an input command, decide on a course of action as an output event.</li>
+          <li class="fragment">Mutation logic - given current state and an output event, apply the event to the current state to arrive at a new state.</li>
         </ul>
       </section>
 
       <section>
-        functions
-      </section>
-
-      <section>
         <h3>By decoupling the "decision" from the "action" you now have an unbroken stream of state updates that capture the entire history of execution</h3>
+        <ul class="fragment">
+          <li>Just looking at this stream of events is enough to reconstruct the application state at any point time.</li>
+          <li class="fragment">All inputs that can modify state <b>must</b> be included: config changes, time trigger events, callouts to external systems.</li>
+          <li class="fragment">Unlike homeopathy, even an atom of non-determinism means the system can enter an unedfined state.</li>
+        </ul>
       </section>
 
       <section>
-        <h3>You record this stream of events as the system of record in an append only log.  Once published they are immutable and unchangeable.</h3>
+        <h3>Primary system of record is the immutable stream of events</h3>
+        <ul class="fragment">
+          <li>Can never "undo" or "modify".</li>
+          <li class="fragment">Use additional "correction" events if you need to ameloriate a broken system.</li>
+        </ul>
       </section>
 
       <section>
-        <h3>How do I query this data?</h3>
+        <h3>In order to efficiently query the system you will need to aggregate events into a traditional database</h3>
+        <ul class="fragment">
+          <li>Allows creating specific read models based the needs of client (ie BI, Operations, Finance, etc)</li>
+          <li class="fragment">This "aggregate" can be dumped and rebuilt at any time if needed</li>
+        </ul>
       </section>
 
       <section>
-        <h3>Isn't that too much data?</h3>
+        <h3>Basic Example</h3>
       </section>
 
       <section>
-        <h3>Won't it take a long time to boot the system?</h3>
+        <h3>You are building a shopping cart app</h3>
+        <ul class="fragment">
+          <li>Users add items from their cart</li>
+          <li>Some business logic to determine if an item can be added</li>
+          <li>Show appropriate error if item not addable</li>
+        </ul>
       </section>
 
+      <section>
+        <h3>Typical CRUD</h3>
+        <pre><code>
+sub add_item_to_cart {
+  my $item = shift;
+
+  # Check if user can add this item
+  if ($some_condition) {
+    # Add to in memory shopping cart
+    ...
+
+    # Also persist the user's shopping cart for later
+    $dbh->do(qq{UPDATE shopping_cart SET ... });
+  }
+
+  # Couldn't add item
+  die "Unable to add item: out of stock";
+}
+        </code></pre>
+      </section>
+
+      <section>
+        <h3>Event Decision</h3>
+        <pre><code>
+sub add_item_to_cart {
+    my $item = shift;
+
+    my $evt;
+    # Determine if user can add this item
+    if ($some_condition) {
+      # Item added
+      $evt = {
+        command => 'item_added_to_cart',
+        item_id => 123,
+        quantity => 3,
+      };
+    }
+    else {
+      # Not able to add item
+      $evt  = {
+        command => 'rejected_add_item_to_cart',
+        error => 'Not in stock'
+      };
+    }
+
+    # Append event to log
+    $dbh->do(qq{INSERT into events values( ... evt details ...)});
+}
+        </pre></code>
+      </section>
+
+      <section>
+      <h3>Event Application</h3>
+        <pre><code>
+sub item_added {
+    my $event = shift;
+
+    # Mutate in memory shopping cart
+    ...
+}
+
+sub item_add_rejected {
+    my $event = shift;
+
+    # Show error message to user
+    ...
+}
+        </pre></code>
+      </section>
+
+      <section>
+        <h3>What next?</h3>
+        <ul class="fragment">
+          <li>How to deal with datamodel changes?</li>
+          <li class="fragment">Isn't that too much data?</li>
+          <li class="fragment">Won't it take a long time to replay all events?</li>
+        </ul>
+      </section>
 
       <section>
         <h2>Questions?</h2>
@@ -144,8 +236,8 @@
       <section>
         <h3>Links</h3>
         <ul>
-          <li><a href="https://raftconsensus.github.io/">The Raft Consensus Algorithm</a></li>
-          <li><a href="http://thesecretlivesofdata.com/raft/">Raft Visualization</a></li>
+          <li><a href="http://www.martinfowler.com/eaaDev/EventSourcing.html">Quick Intro to Event Sourcing</a></li>
+          <li><a href="https://github.com/eventstore/eventstore/wiki/Event-Sourcing-Basics">Event Sourcing Basics</a></li>
         </ul>
         <p>This presentation and others are availble at <a href="http://github.com/rfarr/presentations">http://github.com/rfarr/presentations</a></p>
       </section>
@@ -157,18 +249,6 @@
   <style>
     img {
       max-height: 550px !important;
-    }
-
-    #rsm {
-      height: 500px;
-    }
-
-    #transitions {
-      height: 300px;
-    }
-
-    #terms {
-      height: 300px;
     }
   </style>
 
