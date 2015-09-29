@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Bitcoin</title>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<meta name="generator" content="S5" />
+<meta name="version" content="S5 1.1" />
+<meta name="presdate" content="20130301" />
+<meta name="author" content="Richard Farr" />
+<meta name="company" content="" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- S5 JS -->
+<script src="ui/default/slides.js" type="text/javascript"></script>
+
+<style>
+    .container {
+        width: 100%;
+        height: 500px;
+    }
+
+    div[name='what-is-bitcoin'] .container {
+        background: url(img/coins.jpg) right no-repeat;
+    }
+
+    div[name='buying-and-selling'] .container {
+        background: url(img/exchange.jpg) center no-repeat;
+    }
+
+    div[name='addresses'] .container {
+        background: url(img/address.png) center no-repeat;
+    }
+
+    div[name='blockchain-2'] .container {
+        background: url(img/blockchain.png) center no-repeat;
+    }
+
+    div[name='proofofwork'] .container {
+        background: url(img/locked-wallet.jpg) center no-repeat;
+    }
+
+    div[name='questions'] .container {
+        background: url(img/digital-global.jpg) center no-repeat;
+bitcoin-mining    }
+
+    div[name='bitcoin-mining'] .container {
+        background: url(img/mining-rig.jpg) center no-repeat;
+    }
+
+    .center {
+        text-align: center;
+    }
+    
+
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<div id="controls"></div>
+<div id="currentSlide"></div>
+<div id="header"></div>
+<div id="footer">
+<h1>Bitcoin</h1>
+<h2>Currency of the Future?</h2></div>
+
+</div>
+<div class="presentation">
+
+<div class="slide" name="welcome">
+<h1>Bitcoin</h1>
+<h3>Richard Farr</h3>
+<img src="img/logo.png"/>
+</div>
+
+
+<div class="slide" name="what-is-bitcoin">
+<h1>What is Bitcoin?</h1>
+<div class="container">
+<ul>
+<li>A peer to peer digital currency</li>
+<li>Cash like properties</li>
+<li>No central issuer</li>
+<li>Pseudo-anonymous</li>
+</ul>
+</div>
+</div>
+
+<div class="slide" name="getting-your-first-bitcoin">
+<h1>Bitcoin Clients</h1>
+<ul>
+<li>Multiple Bitcoin clients available</li>
+<li>Standard client for Win/Mac/Linux available from bitcoin.org</li>
+<li>Simply download and run, wait several hours for full sync to the network</li>
+<li>Mobile wallet for Android: 'Bitcoin Wallet' app</li>
+<li>Third party wallet services such as coinbase.com</li>
+</ul>
+</div>
+
+<div class="slide" name="getting-your-first-bitcoin">
+<h1>Receiving Bitcoins</h1>
+</div>
+
+<div class="slide" name="addresses">
+<h1>Bitcoin Addresses</h1>
+<div class="container">
+</div>
+</div>
+
+<div class="slide" name="addresses-2">
+<h1>Bitcoin Addresses</h1>
+<ul>
+<li>In order to send and recieve bitcoins your client generates a random public/private ECDSA keypair</li>
+<li>The public key is hashed into a human readable format and becomes your 'receiving address'
+    <ul>
+        <li>for example '18rCHnjG8W4gBoGhFPNmgt18ckFjuwG4d7'</li>
+    </ul>
+</li>
+<li>If you want someone to send you BTC you send them your receiving address</li>
+<li>Receiving addresses are psuedo-anonymous, by themselves they say nothing about who the receiver is</li>
+</ul>
+</div>
+
+<div class="slide" name="addresses-3">
+<h1>Bitcoin Addresses</h1>
+<ul>
+<li>The private key is kept secret to only the BTC wallet holder</li>
+<li>The private key is used when you want to 'send' BTC</li>
+<li>Your BTC client creates a new transaction, signs it with the private key, and publishes it to the network</li>
+<li>The network verifies that the private key matches the expected public key so that only the holder of the private key can spend the coins associated with the receive address</li>
+</div>
+
+<div class="slide" name="blockchain">
+<h1>Blockchain</h1>
+<ul>
+<li>All transactions in the Bitcoin network are published publicly in a ledger known as the blockchain</li>
+<li>The blockchain is a hash or 'Merkle' tree where each 'block' contains the hashed value of all previous blocks</li>
+<li>Allows the authenticity of the entire blockchain to be validated easily</li>
+<li>New blocks are added to the chain with an expected frequency of once every ten minutes</li>
+<li>Blocks details which transactions were made, what addresses sent and received a certain amount of BTC</li>
+</ul>
+</div>
+
+<div class="slide" name="blockchain-2">
+<h1>Blockchain</h1>
+<div class="container">
+</div>
+</div>
+
+<div class="slide" name="proofofwork">
+<h1>Proof of Work</h1>
+<div class="container"></div>
+</div>
+
+<div class="slide" name="proofofwork-2">
+<h1>Proof of Work</h1>
+<ul>
+<li>What keeps people honest?  How to prevent double spending or rewriting the block chain history?</li>
+<li>Bitcoin requires that each block of transactions be 'solved' before it is accepted into the network</li>
+<li>The problem to solve is to find a random nonce, that when combined with the contents of the current block and the hash of the previous block will hash to a value that is smaller than the difficulty setting</li>
+<li>The difficulty of solving a block can be calibrated by requiring a larger or smaller value of the resultant hash</li>
+</ul>
+</div>
+
+<div class="slide" name="proofofwork-3">
+<h1>Proof of Work</h1>
+<ul>
+<li>Some nodes of the bitcoin network dedicate large amounts of computing power in order to solve a block</li>
+<li>These nodes are colliquially known as bitcoin miners</li>
+<li>The network calibrates difficulty dynamically in order to produce one solved block on average every 10 minutes</li>
+<li>Rewriting the block chain after a solution has already been found is computationally difficult as you would need to rewrite all blocks after as well</li>
+</ul>
+</div>
+
+<div class="slide" name="confirmations">
+<h1>Confirmations</h1>
+<ul>
+<li>Once a new transaction is published it can be seen immediately on the network</li>
+<li>At this point the transaction is not yet in a found block and could conceivable be reversed or lost</li>
+<li>This is known as 0 confirmations</li>
+<li>As time passes and the blockchain is extended, each block increases the number of confirmations</li>
+<li>Merchants can choose the number of confirmations that they wait to manage their risk.  Generally the most conservative merchants wait for 6 confirmations, approx 1 hr</li>
+</ul>
+</div>
+
+<div class="slide" name="buying-and-selling">
+<h1>Buying and Selling Bitcoin</h1>
+<div class="container">
+<ul>
+<li>Exchanges</li>
+<li>In Person</li>
+</ul>
+</div>
+</div>
+
+<div class="slide" name="buying-and-selling-2">
+<h1>Exchanges</h1>
+<ul>
+<li>Many bitcoin exchanges have sprung up in order to allow the buying and selling of BTC over the internet</li>
+<li>Mt. Gox is the largest exchange and is based out of Japan.  They are currently in the process of opening a presence in the United States</li>
+<li>caVirtex is a Canadian exchange based in Alberta.  Allows direct deposit and withdrawal from a Canadian bank account</li>
+<li>Most exchanges are generally not market makers and charge a fee for conversion</li>
+</ul>
+</div>
+
+<div class="slide" name="buying-and-selling-3">
+<h1>Local bitcoins</h1>
+<img src="img/atm.gif" style="position: absolute; top: 150px; right: 10px; z-index: 0"/>
+<ul style="z-index: 1; position: absolute; padding-right: 150px;">
+<li>Find someone else who will exchange bitcoins for physical cash or other goods</li>
+<li>LocalBitcoins.com allows you to find classified ads for buyers and sellers in your neighbourhood to do in person exchanges</li>
+<li>BTC ATMs are currently under development and being deployed to allow convenient and fast conversion of cash into BTC</li>
+<li>Paper Bitbills are bills with the public/private key printed right on them.  The private key is covered such that once exposed the bill can not be passed off as unspent</li>
+</ul>
+</div>
+
+<div class="slide" name="currencies">
+<h1>Functions of Money</h1>
+<ul>
+    <li>Medium of exchange</li>
+    <li>Store of value</li>
+    <li>Unit of account</li>
+</ul>
+</div>
+
+
+<div class="slide" name="advantages-mt">
+<h1>Medium of Exchange - Advantages</h1>
+<ul>
+<li>No third party intermediary is required to send or receive BTC</li>
+<li>Low transaction fees</li>
+<li>Can send BTC anywhere in the world, within minutes - only internet connection and client software required</li>
+<li>No identy information needs to be divulged in order to send or receive BTC</li>
+</ul>
+</div>
+
+
+<div class="slide" name="advantages-mt-2">
+<h1>Medium of exchange - Advantages</h1>
+<ul>
+<li>No chargebacks for transactions, BTC is as good as cash</li>
+<li>Bitcoin accounts can not be frozen or confiscated unless the private key is known</li>
+<li>Private keys can be stored encrypted and backed up in the cloud and do not need to be online to receive BTC</li>
+</ul>
+</div>
+
+<div class="slide" name="disadvantages-mt">
+<h1>Medium of exchange - Disadvantages</h1>
+<ul>
+<li>Bitcoin transaction confirmations generally take several minutes to an hour to become confirmed by the network</li>
+<li>No chargebacks means that buyers are taking on more risk when dealing with merchants</li>
+<li>Requires large computing network and internet access to function</li>
+<li>Wallet theft is problematic and some new malware specifically searches for bitcoin wallets to steal</li>
+</div>
+
+<div class="slide" name="advantages-sv">
+<h1>Store of value - Advantages</h1>
+<ul>
+<li>Money supply of Bitcoin is fixed at ~ 21 million</li>
+<li>In theory the value of Bitcoin relative to the economy should increase in proportion to economic growth</li>
+<li>Bitcoin combines the scarcity of precious metals with the convertability of cash</li>
+<li>Access to the account is possible from anywhere in the world instantly</li>
+<li>Bitcoin accounts cannot be frozen or tampered with without access to the private key</li>
+</ul>
+</div>
+
+<div class="slide" name="disadvantages-sv">
+<h1>Store of value - Disadvantages</h1>
+<ul>
+<li>System relies on electricity and computing power for infrastructure</li>
+<li>Wild price flucuations of Bitcoin are likely as the market cap is still very small (~400 million)</li>
+<li>Easy to lose the private key and thus the balance associated with it unless safeguards are taken</li>
+<li>Bitcoin still relatively new, protocol may have as yet undiscovered flaws</li>
+</ul>
+</div>
+
+<div class="slide" name="unit-of-account">
+<h1>Unit of account</h1>
+<ul>
+<li>Bitcoins are subdividable to 8 decimal places, worth about 0.00005 cents at current market prices</li>
+<li>This unit is known as a Satoshi, named after the creator of Bitcoin</li>
+<li>Other units include mBTC and &micro;BTC</li>
+<li>If 8 decimal places turn out to not be enough the precision can be expanded if most nodes on the network agree</li>
+</ul>
+</div>
+
+<div class="slide" name="bitcoin-mining">
+<h1>Mining Bitcoins</h1>
+<div class="container"></div>
+</div>
+
+<div class="slide" name="bitcoin-mining-2">
+<h1>Mining Bitcoins</h1>
+<ul>
+<li>Anyone can become a bitcoin miner</li>
+<li>When a block is 'mined' the miner is paid both Seignorage (currently 25BTC) as well as transction fees</li>
+<li>Seignorage will decrease geometrically over several years as the number of Bitcoins in circulation approaches 21 million</li>
+<li>After that point transaction fees will be the sole reward for miners</li>
+<li>Market incentive for miners to minimize overhead and maximize output</li>
+</ul>
+</div>
+
+
+<div class="slide" name="bitcoin-mining-3">
+<h1>Mining Bitcoins</h1>
+<ul>
+<li>Progression of more efficient and powerful methods of mining
+    <ul>
+        <li>CPU ( ~30 MHash/s @ 65 watts)</li>
+        <li>GPU ( ~1000 MHash/s @ 700 watts )</li>
+        <li>FPGA ( ~1000 MHash/s @ 40 watts)</li>
+        <li>ASIC ( ~60,000 MHash/s @ 60 watts)</li>
+    </ul>
+</li>
+<li>Newer hardware is faster and uses less electricity</li>
+<li>As more computational power is added the Bitcoin network adjusts diffcult upwards</li>
+<li>Mining equilibrium depends on price of bitcoin, fee amount, electricity cost, difficulty level, and hardware acquisition costs</li>
+</ul>
+</div>
+
+<div class="slide" name="transaction-fees">
+<h1>Transaction Fees</h1>
+<ul>
+<li>When sending a BTC payment the user can optionally attach a fee amount</li>
+<li>This fee amount is paid to the miner who solves the block first</li>
+<li>Miners have full discretion over which transactions they will accept and process</li>
+<li>While it is optional, if no fee is attached the transaction may never get processed</li>
+</ul>
+</div>
+
+
+<div class="slide center" name="merchants">
+<h1>Places to Spend Your BTC</h1>
+<img src="img/accepted.png" style="margin-top: 100px"/>
+</div>
+
+
+<div class="slide center" name="merchants-coinabul">
+<h1>Coinabul</h1>
+<img src="img/coinabul.png"/>
+</div>
+
+<div class="slide center" name="merchants-silk-road">
+<h1>Silkroad</h1>
+<img src="img/silk-road.jpg"/>
+</div>
+
+<div class="slide center" name="merchants-namecheap">
+<h1>Namecheap</h1>
+<img src="img/namecheap.png"/>
+</div>
+
+<div class="slide center" name="merchants-mining">
+<h1>Mining</h1>
+<img src="img/bfl.png"/>
+</div>
+
+<div class="slide center" name="satoshi-dice">
+<h1>Satoshi Dice</h1>
+<img src="img/dice.png"/>
+</div>
+
+<div class="slide center" name="merchants-store">
+<h1>BitcoinStore.com</h1>
+<img src="img/store.png"/>
+</div>
+
+<div class="slide center" name="merchants-poker">
+<h1>Poker</h1>
+<img src="img/poker.png"/>
+</div>
+
+<div class="slide center" name="merchants-pizza">
+<h1>Pizza</h1>
+<img src="img/pizza.png"/>
+</div>
+
+<div class="slide" name="predictions">
+<h1>Predictions</h1>
+<ul>
+<li>Bitcoin has a promising future and could potentially revolutionize our idea of electronic payments</li>
+<li>Low cost, fast method to send money anywhere in the world</li>
+<li>Innovative properties such as pseudo-anonymity, decentralized trust model, inflation resistance</li>
+<li>Bitcoin ultimately will complement, not replace existing monetary systems</li>
+</ul>
+</div>
+
+<div class="slide" name="questions">
+<h1>Questions?</h1>
+<div class="container"></div>
+</div>
+
+</body>
+</html>
