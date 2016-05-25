@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Time</title>
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/serif.css" id="theme">
+  <!--Add support for earlier versions of Internet Explorer -->
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <!-- Wrap the entire slide show in a div using the "reveal" class. -->
+  <div class="reveal">
+    <!-- Wrap all slides in a single "slides" class -->
+    <div class="slides">
+
+      <!-- ALL SLIDES GO HERE -->
+      <!-- Each section element contains an individual slide -->
+      <section>
+        <h4>TO.PM Toronto <code>Perl</code> Mongers</h4>
+        <h2>The Fourth Dimension</h2><code>Computers</code><br/>&amp;<h1>You</h1>
+        <br/>
+        <h4 style="text-align: right">Richard Farr</h4>
+      </section>
+
+      <section id="background">
+        <section>
+          <h2>"The only reason for time is so that everything doesn't happen at once."</h2>
+          <h4><i>Albert Einstein</i></h4>
+        </section>
+
+        <section>
+          <h3>In this talk:</h3>
+          <ul>
+            <li class="fragment">The faulty system humans use to measure Earth time (UTC)</li>
+            <li class="fragment">The faulty and highly political nature of knowing what time it is outside (Time Zones)</li>
+            <li class="fragment">The faulty computer representation of the faulty UTC system (Unix Time)</li>
+            <li class="fragment">The faulty representation of Unix Time that might lead to our untimely demise (2038 problem)</li>
+            <li class="fragment">The faulty methods of dealing with Unix Time's faulty implementation of the faulty UTC (Leap seconds)</li>
+            <li class="fragment">The faulty timekeeping that we expect out of distributed systems</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>In short this talk could also be titled: <span class="fragment"><i>"A Study In Fault Tolerant Systems"</i></span></h2>
+        </section>
+
+      </section>
+
+      <section id="utc-tai">
+
+        <section>
+          <h2>Coordinated Universal Time (UTC for short, obviously)</h2>
+          <ul>
+            <li class="fragment">The English wanted coordinated universal time (<strong>CUT</strong>) but the French wanted temps universal coodonné (<strong>TUC</strong>)</li>
+            <li class="fragment">Instead of doing the sensible thing and fighting a war over it they did something far worse: <span class="fragment">Invent the <i>"Three Letter Anagram"</i></span></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>What is UTC?</h2>
+          <ul>
+            <li class="fragment">UTC is meant to be the exact "Human Time" or wallclock time for the world, providing a perfectly ordered and predictable model of time</li>
+            <li class="fragment">...while at they same time papering over the fact that the Earth's rotation is slowing and the Earth's orbit is decaying</li>
+            <li class="fragment">In short it follows the UNIX™ philosphy: 90% simplicity, 10% PIA</li>
+          </ul>
+        </section>
+
+        <section>
+          <ul>
+            <li>Maintaining UTC requires constant measurement and tuning to ensure that the Sun rises at the same time each day (currently 1.3ms/day on average)</li>
+            <li class="fragment">As a result of these corrections it is not possible to determine the exact time interval between two UTC datetimes without consulting lookup tables</li>
+            <li class="fragment">By the 22nd century it is estismated that two leap second corrections will be needed per year, and by the 25th, 4 seconds!</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Meet TAI Time, UTC's close but soon to be distant cousin</h2>
+          <ul>
+            <li class="fragment">Temps Atomique International (the French won this time...)</li>
+            <li class="fragment">High precision atomic time standard based on the 'proper passage of time' on the Earth's surface (the geoid), ignoring Earth's orbit or rotation (other then relativistic effects)</li>
+          </ul>
+        </section>
+
+        <section>
+          <ul>
+            <li>TAI time was last exactly synchronized with UTC back in 1958 but since then has drifted due to the changing motion of the Earth</li>
+            <li class="fragment">Currently TAI time is exactly 36 seconds ahead of UTC</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>TAI Trivia</h2>
+          <ul>
+            <li class="fragment">Atomic clock services first started in 1955</li>
+            <li class="fragment">In 1967 the SI Second was defined in terms of the Cæsium atom as 9,192,631,770 periods of radiation</li>
+            <li class="fragment">Due to differential gravitational time dilation at different altitudes, the various Cæsium clocks would tick at slightly different rates, which had to be corrected by averaging and applying corrections to bring the calculated time to mean sea level!</li>
+          </ul>
+        </section>
+
+      </section>
+
+      <section id="unix-time">
+        <section>
+          <h2>Bringing Computers into the Mix</h2>
+          <h3 class="fragment"><i>...well Unix at any rate, but it's the only one that counts!</i></h3>
+        </section>
+
+        <section>
+          <h2>Unix Time Representation</h2>
+          <ul>
+            <li class="fragment">Unix Epoch was chosen to be Jan 1, 1970 00:00:00 UTC (funny thing because UTC didn't exist until 1972!)</li>
+            <li class="fragment">Positive integers represent seconds elapsed since the Epoch (an outright lie), negative for times before</li>
+            <li class="fragment">...and there are 86400 seconds in day. <i>Always</i> (your definition of a second may have to stretch a little)</li>
+            <li class="fragment"><i>The Unix Time Truth</i>: Unix time is actually the number of calendar days since the epoch multipled by 86400, then add the number of seconds since midnight</li>
+            <li class="fragment">There is no concept of time zones, Unix time is always relative to UTC+0, but conversion into local time is easy provided you know your offset</li>
+          </ul>
+      </section>
+
+      <section>
+        <h2>The History of (Unix) Time</h2>
+        <ul>
+          <li class="fragment">Originally Unix time was a <code>long</code> integer... that incremented at a rate of 60 Hz</li>
+          <li class="fragment">The "Unix Programmer's Manual" from 1971 stated that the <i>"chronologically-minded user will note that 2<sup>32</sup> sixtieths of a second, or 2<sup>38</sup> seconds is only about 8.5 years"</i></li>
+          <li class="fragment">In order to extend the range they decided to drop the 60 ticks per second and move to a single tick per second</li>
+          <li class="fragment">As a result the "chronologically-minded" greybeards decided that while 8.5 years would be a trainwreck, 68 years ensured that they would be long gone before having to clean up their mess!</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>The</h2><code>0b01111111111111111111111111111111</code><h2>Problem</h2>
+      </section>
+
+      <section>
+        <ul>
+          <li>Internally <code>time_t</code> is a signed 32-bit integer which will overflow on Monday January 18, 2038 at 22:14:08 EST (talk about a bad start to the week!)</li>
+          <li class="fragment">In order to mitigate this, most modern 64-bit system use <code>time_t</code> that is a signed 64 bit integer that will overflow some time after the heat death of the universe (<i>hopefully we'll have moved to another one by then!</i>)</li>
+          <li class="fragment">In <i>2014</i>, OpenBSD 5.5 was the first major operating system to convert to 64-bit <code>time_t</code> for all versions of its operating system, including those that run on 32-bit archs</li>
+          <li class="fragment">However existing 8, 16, and 32-bit systems, as well as new ones deployed <i>without</i> 64-bit <code>time_t</code> (<i>ahem Linux</i>) are still problematic.  (See unlike WinY2K, most of these system are embedded and actually run <i>important</i> software)</li>
+        </ul>
+      </section>
+
+      </section>
+
+      <section id="timezones">
+        <section>
+          "Not only is DST stupid, but it kills" - Dave Rolsky
+        </section>
+      </section>
+
+      <section id="simultaneity">
+      </section>
+
+      <section id="leapsecond">
+        <section>
+          <h2>Look before you "Leap"</h2>
+          <ul>
+            <li class="fragment">Almost everyone (well programmers anyways) think of a day as being 86400 seconds</li>
+            <li class="fragment">This is more or less correct, which is the problem</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>The Earth's rotation speed varies based on several factors:</h3>
+          <ul>
+            <li class="fragment">Changes in mantle convection patterns</li>
+            <li class="fragment">Post glacial rebound of the Earth's surface</li>
+            <li class="fragment">Major earthquakes</li>
+            <li class="fragment">Tidal friction</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Earth's Rotation Variance</h2>
+          <img src="img/earth-rotation.svg"/>
+        </section>
+
+        <section>
+          <h2>Temporal Reality</h2>
+          <ul>
+            <li>As a result of this unpredictibility, leap second changes are published only 6 months in advance</li>
+            <li class="fragment">By convention, leap seconds are only inserted or removed at the end of June 30 or December 31</li>
+            <li class="fragment">However in theory they can occur at the end of any month according to the UTC standard (think 'Apocalypse' if it came to that)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Temporal Fantasy</h2>
+          <ul>
+            <li class="fragment">According to the POSIX standard, there are exactly 86400 seconds in a day</li>
+            <li class="fragment">Thus there is no real way to represent either the variance of 86399 or 86401 properly</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>System Clocks in Unix (yes there is more then one!)</h2>
+          <p class="fragment">From the OpenBSD man pages: <code>clock_gettime(2)</code></p>
+          <code style="font-size: 0.8em">
+          <ul>
+            <li class="fragment">CLOCK_REALTIME - time that increments as a wall clock should</li>
+            <li class="fragment">CLOCK_MONOTONIC - time that increments as a wall clock should but whose absolute value is meaningless and cannot jump, providing accurate realtime interval measurement, even across suspend and resume</li>
+            <li class="fragment">CLOCK_UPTIME/CLOCK_BOOTTIME - time whose absolute value is the time the system has been running and not suspended, providing accurate uptime measurement, both absolute and interval</li>
+          </ul>
+          </code>
+        </section>
+
+        <section>
+          <h4>For the addition of a second:</h4>
+          <ul>
+            <li class="fragment">Most applications typically use <code>CLOCK_REALTIME</code> which is affected by both NTP adjustments as well as leap seconds</li>
+            <li class="fragment">All is normal up until 23:59:59.999 UTC</li>
+            <li class="fragment">On the first kernel tick of the clock after 00:00:00 is reached the clock is reset back to 23:59:59</li>
+            <li class="fragment">To programs on the system it appears as though time has run backwards</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Addition of second to <code>CLOCK_REALTIME</code></h3>
+          <pre><code>
+#!/usr/bin/env perl
+
+use common::sense;
+
+use Time::HiRes qw{time};
+
+print time; # 915_148_799.000
+print time; # 915_148_799.999
+print time; # 915_148_800.000
+print time; # 915_148_799.000   &lsaquo;-- We've invented time travel!
+print time; # 915_148_799.999
+print time; # 915_148_800.000
+          </code></pre>
+        </section>
+
+        <section>
+          <h4>For the subtraction of a second (this has not yet happened):</h4>
+          <ul>
+            <li class="fragment">All is normal up until 23:59:58.999 UTC</li>
+            <li class="fragment">On the first kernel tick of the clock after 23:59:59.000 is reached the clock is set forward to 00:00:00</li>
+            <li class="fragment">To programs on the system it appears as though they missed a second, which normally isn't an issue for non real time systems</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Subtraction of second from <code>CLOCK_REALTIME</code></h3>
+          <pre><code>
+#!/usr/bin/env perl
+
+use common::sense;
+
+use Time::HiRes qw{time};
+
+print time; # 915_148_798.000
+print time; # 915_148_798.999
+print time; # 915_148_800.000   &lsaquo;-- systemd's hogging the CPU again...
+print time; # 915_148_800.999
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Hairy Effects</h2>
+          <ul>
+            <li class="fragment">When adding a leap second, 915148799.500 is now an ambiguous value that refers to two distinct points in time (a manmade wormhole)</li>
+            <li class="fragment">When subtracting a leap second, 915148799.500 now refers to a non existent point in time! (a manmade singularity)</li>
+          </ul>
+        </section>
+
+        <section>
+          <ul>
+            <li>How do you unambiguously sort timestamps? Or even preserve uniqueness? (eg logs, audit entries, generated IDs, etc)</li>
+            <li class="fragment">How do you correctly calculate elapsed time? (it will be negative!)</li>
+            <li class="fragment">Leap second insertions have been known to bring down vital infrastructure (e.g. Reddit) and cause infinite loops in poorly written software!</li>
+        </section>
+
+        <section>
+          <h2>Mitigations for Hackers</h2>
+          <ul>
+            <li class="fragment"><i>Don't</i> write code that assumes that time can't flow backward! (cause who would do that?)</li>
+            <li class="fragment"><i>Don't</i> assume that timestamps will be unique, and don't solely rely on time to generate IDs</li>
+            <li class="fragment"><i>Do</i> use <code>CLOCK_MONOTONIC</code> for those applications where the passage of time is more important than wall accuracy</li>
+            <li class="fragment"><i>Do</i> write automated tests that simulate clock discontinuities (wait until your boss is on vacation)</li>
+          </u>
+        </section>
+
+        <section>
+          <h2>Mitigations for Operators</h2>
+          <ul>
+            <li class="fragment">Ignore the leap second and have NTP slowly 'catch up' the system later - but this takes up to 2 days to get back to millisecond clock accuracy (especially bad for clusters)</li>
+            <li class="fragment">Slew the clock so that it is slowed over the course of 10s or 100s of seconds just before midnight (your clock is 'wrong' for longer)</li>
+            <li class="fragment">Change your NTP servers to 'smear' the time change in their served time. Clients won't know the difference (need to run your own private NTP servers)</li>
+            <li class="fragment">When all else fails, just turn it off and then turn it on (often the simplest and safest)<span class="fragment"> - optionally let your customers know in advance!</span></li>
+          </ul>
+
+        </section>
+      </section>
+
+      <section>
+        <h1>Questions ?</h1>
+      </section>
+
+      <section>
+        <h2>Links</h2>
+        <a href="http://developers.redhat.com/blog/2015/06/01/five-different-ways-handle-leap-seconds-ntp/">Five Different Ways to Handle Leap Seconds</a>
+        <a href="http://googlecloudplatform.blogspot.com/2015/05/Got-a-second-A-leap-second-that-is-Be-ready-for-June-30th.html">Leap second smearing</a>
+      </section>
+
+      </div>
+  </div>
+
+  <style>
+    img {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+  </style>
+
+
+  <script src="js/Chart.min.js"></script>
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+  <script>
+    // Required, even if empty.
+    Reveal.initialize({
+    });
+
+  </script>
+</body>
+</html>
