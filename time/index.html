@@ -358,6 +358,14 @@ FROM appointments;</span>
         </section>
 
         <section>
+          <h4>Handling clock changes</h4>
+          <ul>
+            <li class="fragment">POSIX leaves it up to implementors to determine how to handle both addition and subtraction of leap seconds</li>
+            <li class="fragment">There is no "official" or "correct" way to do it but what follows is very similiar to the approach the Linux kernel takes</li>
+          </ul>
+        </section>
+
+        <section>
           <h4>For the addition of a second:</h4>
           <ul>
             <li class="fragment">Most applications typically use <code>CLOCK_REALTIME</code> which is affected by both NTP adjustments as well as leap seconds</li>
