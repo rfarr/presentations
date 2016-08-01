@@ -40,7 +40,6 @@
             <li class="fragment">The faulty computer representation of the faulty UTC system (Unix Time)</li>
             <li class="fragment">The faulty representation of Unix Time that might lead to our untimely demise (2038 problem)</li>
             <li class="fragment">The faulty methods of dealing with Unix Time's faulty implementation of the faulty UTC (Leap seconds)</li>
-            <li class="fragment">The faulty timekeeping that we expect out of distributed systems</li>
           </ul>
         </section>
 
@@ -65,7 +64,7 @@
           <ul>
             <li class="fragment">UTC is meant to be the exact "Human Time" or wallclock time for the world, providing a perfectly ordered and predictable model of time</li>
             <li class="fragment">...while at they same time papering over the fact that the Earth's rotation is slowing and the Earth's orbit is decaying</li>
-            <li class="fragment">In short it follows the UNIX™ philosphy: 90% simplicity, 10% PIA</li>
+            <li class="fragment">In short it follows the 80-20 rule</li>
           </ul>
         </section>
 
@@ -73,7 +72,7 @@
           <ul>
             <li>Maintaining UTC requires constant measurement and tuning to ensure that the Sun rises at the same time each day (currently 1.3ms/day on average)</li>
             <li class="fragment">As a result of these corrections it is not possible to determine the exact time interval between two UTC datetimes without consulting lookup tables</li>
-            <li class="fragment">By the 22nd century it is estismated that two leap second corrections will be needed per year, and by the 25th, 4 seconds!</li>
+            <li class="fragment">By the 22nd century it is estimated that two leap second corrections will be needed per year, and by the 25th, 4 seconds!</li>
           </ul>
         </section>
 
@@ -113,10 +112,10 @@
           <h2>Unix Time Representation</h2>
           <ul>
             <li class="fragment">Unix Epoch was chosen to be Jan 1, 1970 00:00:00 UTC (funny thing because UTC didn't exist until 1972!)</li>
-            <li class="fragment">Positive integers represent seconds elapsed since the Epoch (an outright lie), negative for times before</li>
-            <li class="fragment">...and there are 86400 seconds in day. <i>Always</i> (your definition of a second may have to stretch a little)</li>
+            <li class="fragment">Positive integers widely believed to represent seconds elapsed since the Epoch...</li>
+            <li class="fragment">...and there are 86400 seconds in day. <i>Always</i> (in other words your definition of a second may have to stretch a little)</li>
             <li class="fragment"><i>The Unix Time Truth</i>: Unix time is actually the number of calendar days since the epoch multipled by 86400, then add the number of seconds since midnight</li>
-            <li class="fragment">There is no concept of time zones, Unix time is always relative to UTC+0, but conversion into local time is easy provided you know your offset</li>
+            <li class="fragment">There is no concept of time zones, Unix time is always relative to UTC+0, but conversion into local time is easy provided you know your offset (more on that later)</li>
           </ul>
       </section>
 
@@ -124,10 +123,33 @@
         <h2>The History of (Unix) Time</h2>
         <ul>
           <li class="fragment">Originally Unix time was a <code>long</code> integer... that incremented at a rate of 60 Hz</li>
-          <li class="fragment">The "Unix Programmer's Manual" from 1971 stated that the <i>"chronologically-minded user will note that 2<sup>32</sup> sixtieths of a second, or 2<sup>38</sup> seconds is only about 8.5 years"</i></li>
+          <li class="fragment">The "Unix Programmer's Manual" from 1971 stated that the <i>"chronologically-minded user will note that 2<sup>32</sup> sixtieths of a seconds is only about 2.5 years"</i></li>
           <li class="fragment">In order to extend the range they decided to drop the 60 ticks per second and move to a single tick per second</li>
-          <li class="fragment">As a result the "chronologically-minded" greybeards decided that while 8.5 years would be a trainwreck, 68 years ensured that they would be long gone before having to clean up their mess!</li>
+          <li class="fragment">As a result the "chronologically-minded" greybeards decided that while 2.5 years would be a trainwreck, 68 years ensured that they would be long gone before having to clean up their mess!</li>
         </ul>
+      </section>
+
+      <section>
+        <h2>From the man page...</h2>
+				<pre>
+11/3/71	SYS_TIME (II)
+
+NAME  time -- get time of year
+SYNOPSIS  sys time / time = 13.
+
+(time AC--MQ)
+DESCRIPTION  time returns the time since 00:00:00, Jan. 1, 1971,
+             measured in sixtieths of a second. The high order word
+             is in the AC register and the low order is in the MQ.
+
+FILES	
+SEE_ALSO	
+DIAGNOSTICS	
+BUGS  The chronological--minded user will note that 2**32 sixtieths
+      of a second is only about 2.5 years.
+
+OWNER	ken, dmr
+				</pre>
       </section>
 
       <section>
@@ -147,11 +169,139 @@
 
       <section id="timezones">
         <section>
+          <h2>Timezones</h2>
           "Not only is DST stupid, but it kills" - Dave Rolsky
         </section>
-      </section>
 
-      <section id="simultaneity">
+        <section>
+          <ul>
+            <li>Britain established the first time zone in 1675, when the Royal Observatory standardized Greenwich Mean Time</li>
+            <li class="fragment">Meant as an aide for mariners to be able to determine their longitude relative to London</li>
+            <li class="fragment">By keeping an accurate chronometer set to GMT onboard, a ship can measure the difference between local Solar time and using some trig work out their longitude</li>
+            <li class="fragment">Until John Harrison's invention of an accurate marine chronometer in 1761, accuracy was limited (your mileage may vary)</li>
+        </section>
+
+        <section>
+          <h2>The Politics of Timezones</h2>
+          <ul>
+            <li class="fragment">The French had their own Paris Zero Meridian defined to be exactly 9 minutes and 21 seconds ahead of GMT</li>
+            <li class="fragment">Spain is in the "wrong" timezone: Despite being at the same longitude as Britain it is at +1</li>
+            <li class="fragment">In 2007 Hugo Chavez moved Venezuala 30 minutes back for a more "fair distribution of sunrise"</li>
+            <li class="fragment">Egypt just abolished DST on July 5 just 3 days before it was to come into effect</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Storing and Displaying Times</h2>
+          <ul>
+            <li class="fragment">As a general rule store the timestamp as UTC</li>
+            <li class="fragment">Convert to client's local timezone when displaying</li>
+            <li class="fragment">Simple and sane, but doesn't work when you need to take action at the local time!</li>
+          </ul>
+        </section>
+
+        <section>
+          <p>It is Jan 1, 2016. Book an appointment for 9AM on June 30, 2016. I want a reminder alarm one hour before.</p>
+          <ul>
+            <li class="fragment">Storing this in UTC will yield '2016-06-30 14:00:00'</li>
+            <li class="fragment">On the day of the event my phone retrieves and converts the time to 10AM! (Uh-oh)</li>
+            <li class="fragment">We forgot that DST is in effect! When converting to local time we only used an offset of -4 instead of -5!</li>
+          </ul>
+        </section>
+
+        <section>
+          <p>Instead store the original time plus timezone: '2016-06-30 09:00:00 America/Toronto'</p>
+          <ul>
+            <li class="fragment">When the day of the event comes, load the original time in using whatever the <i>current</i> time zone rules are on that date</li>
+            <li class="fragment">Guarantees that event will fire whenever 9AM America/Toronto time comes to pass</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>SQL and Time</h2>
+          <ul>
+            <li class="fragment">Most RDBMs internally store all timezone aware types as UTC</li>
+            <li class="fragment">Values are converted to UTC on entry, the original time zone information is lost</li>
+            <li class="fragment">Conversion to local time zone occurs transparently when queried, based upon a 'TIMEZONE' connection setting</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Postgres Timestamp Example</h2>
+          <pre><code>
+INSERT INTO times VALUES ('2016-06-17 12:00:00 America/Toronto');
+INSERT INTO times VALUES ('2016-06-17 12:00:00 America/Vancouver');
+SELECT * FROM times;
+<span class="fragment">-----------------------
+ 2016-06-17 12:00:00-04
+ 2016-06-17 15:00:00-04</span>
+<span class="fragment">SET timezone TO 'America/Vancouver';</span>
+<span class="fragment">SELECT * FROM times;
+-----------------------
+ 2016-06-17 09:00:00-07
+ 2016-06-17 12:00:00-07</span>
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Storing the original Timezone</h2>
+          <ul>
+            <li>eg. set a Dentist's appointment for 9AM EST nine months from now</li>
+            <li class="fragment">Unfortunately SQL standard doesn't provide a single datatype to do this</li>
+            <li class="fragment">You need 2 columns: 1 for the timestamp and 1 for the timezone</li>
+            <li class="fragment">Ideally store the timezone as the Olson names, NOT the offset.  The offset could change later! (DST and other potential time zone changes down the line)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Storing timezones in Postgres</h2>
+          <pre><code>
+CREATE OR REPLACE FUNCTION is_timezone( tz TEXT ) RETURNS BOOLEAN as $$
+BEGIN
+ PERFORM now() AT TIME ZONE tz;
+ RETURN TRUE;
+EXCEPTION WHEN invalid_parameter_value THEN
+ RETURN FALSE;
+END;
+$$ language plpgsql STABLE;
+
+CREATE DOMAIN timezone AS CITEXT
+CHECK ( is_timezone( value ) );
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Table setup</h2>
+          <pre><code>
+CREATE TABLE appointments (
+  dt timestamp,
+  tz timezone
+);
+
+INSERT INTO appointments VALUES (
+  '2017-03-03 09:00:00',
+  'America/Toronto'
+);
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Travelling to Nairobi</h2>
+          <pre><code>
+# Combines both columns back into a timestamp with timezone
+<span class="fragment">SELECT (to_char(dt, 'YYYY-mm-dd HH:MI:SS ') || tz)::timestamptz
+AT TIME ZONE 'Africa/Nairobi'
+FROM appointments;</span>
+<span class="fragment">------------------------
+ 2017-03-03 17:00:00</span>
+
+<span class="fragment">SELECT (to_char(dt, 'YYYY-mm-dd HH:MI:SS ') || tz)::timestamptz
+AT TIME ZONE 'America/Toronto'
+FROM appointments;</span>
+<span class="fragment">------------------------
+ 2017-03-03 09:00:00</span>
+          </code></pre>
+        </section>
       </section>
 
       <section id="leapsecond">
@@ -281,7 +431,7 @@ print time; # 915_148_800.999
             <li class="fragment"><i>Don't</i> write code that assumes that time can't flow backward! (cause who would do that?)</li>
             <li class="fragment"><i>Don't</i> assume that timestamps will be unique, and don't solely rely on time to generate IDs</li>
             <li class="fragment"><i>Do</i> use <code>CLOCK_MONOTONIC</code> for those applications where the passage of time is more important than wall accuracy</li>
-            <li class="fragment"><i>Do</i> write automated tests that simulate clock discontinuities (wait until your boss is on vacation)</li>
+            <li class="fragment"><i>Do</i> write automated tests that simulate clock discontinuities</li>
           </u>
         </section>
 
@@ -298,13 +448,25 @@ print time; # 915_148_800.999
       </section>
 
       <section>
+        <h2>Summary</h2>
+        <ul>
+          <li class="fragment">Measuring time simply and accurately is a fool's errand</li>
+          <li class="fragment">Throwing computers into the mix probably doesn't help</li>
+          <li class="fragment">It's always more complicated than you think, RTFM</li>
+        </ul>
+      </section>
+
+      <section>
         <h1>Questions ?</h1>
       </section>
 
       <section>
         <h2>Links</h2>
-        <a href="http://developers.redhat.com/blog/2015/06/01/five-different-ways-handle-leap-seconds-ntp/">Five Different Ways to Handle Leap Seconds</a>
-        <a href="http://googlecloudplatform.blogspot.com/2015/05/Got-a-second-A-leap-second-that-is-Be-ready-for-June-30th.html">Leap second smearing</a>
+        <ul>
+          <li><a href="http://developers.redhat.com/blog/2015/06/01/five-different-ways-handle-leap-seconds-ntp/">Five Different Ways to Handle Leap Seconds</a></li>
+          <li><a href="http://googlecloudplatform.blogspot.com/2015/05/Got-a-second-A-leap-second-that-is-Be-ready-for-June-30th.html">Leap second smearing</a></li>
+          <li><a href="http://postgres.cz/wiki/PostgreSQL_SQL_Tricks_III#Domain_for_time_zone">Postgres Timezone Tip</a></li>
+        </ul>
       </section>
 
       </div>
@@ -315,6 +477,11 @@ print time; # 915_148_800.999
       height: 100%;
       width: 100%;
       position: relative;
+    }
+
+    pre {
+      box-shadow: none;
+      border: 1px solid black;
     }
   </style>
 
